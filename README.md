@@ -35,7 +35,7 @@
 [![Alexis](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/92861778?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/Alexis1663)
 [![Romain](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/92861656?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/Destroyeur6315)
 [![Hugo](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/113190509?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/HugoooR)
-[![Théo](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/92861841?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/Theo03300)
+[![Théo](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/92861841?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/thdupin2)
 [![Audric](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/100680489?v=4&h=75&w=75&fit=cover&mask=circle&maxage=7d)](https://github.com/Audric-S)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
