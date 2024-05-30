@@ -54,5 +54,5 @@
 #Environnement variables
 .env
 
-#IDE
-.idea
+.idea/
+.idea/*
