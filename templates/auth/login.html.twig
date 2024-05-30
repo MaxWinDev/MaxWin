@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Home Page{% endblock %}
+
+{% block body %}
+    <div>
+        <h1>Login Page</h1>
+        <p>Welcome to the login page</p>
+        <form action="{{ path('app_login') }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}
