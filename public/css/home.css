@@ -31,30 +31,31 @@ body, html {
   opacity: 1;
   display: flex;
   justify-content: center;
-  height: 500px;
+  height: 370px;
 }
 
 .container > .game-container {
-  flex: 0 0 200px;
+  flex: 0 0 250px;
   border-radius: 0.5rem;
   transition: 0.5s ease-in-out;
   cursor: pointer;
-  box-shadow: 1px 5px 15px #1e0e3e;
   position: relative;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.5);
+  margin-left: 1%;
 }
 
+
+
 .container > .game-container:nth-of-type(1) {
-  background: url('../assets/images/seven.png') rgba(0, 0, 0, 0.5) no-repeat 50% / cover;
+  background: url('../assets/images/seven.png') rgba(0, 0, 0, 0.6) no-repeat 50% / 120%; /* Change this line */
 }
 
 .container > .game-container:nth-of-type(2) {
-  background: url('../assets/images/seven.png') rgba(0, 0, 0, 0.5) no-repeat 50% / cover;
+  background: url('../assets/images/bj.png') rgba(0, 0, 0, 0.6) no-repeat 50% / 120%; /* Change this line */
 }
 
 .container > .game-container:nth-of-type(3) {
-  background: url('../assets/images/seven.png') rgba(0, 0, 0, 0.5) no-repeat 50% / cover;
+  background: url('../assets/images/seven.png') rgba(0, 0, 0, 0.6) no-repeat 50% / 120%; /* Change this line */
 }
 
 
@@ -80,7 +81,7 @@ body, html {
 
 .container > .game-container:hover {
   flex: 0 0 350px;
-  box-shadow: 1px 3px 15px white;
+  box-shadow: 2px 6px 30px white;
   transform: translateY(-30px);
 }
 
@@ -93,7 +94,7 @@ body, html {
 .container > .game-container:hover .content span{
   margin-bottom: 50%;
   font-size: xx-large;
-  font-weight: bold;
+  font-weight: bolder;
   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
