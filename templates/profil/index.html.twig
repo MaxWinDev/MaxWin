@@ -15,7 +15,7 @@
 				<h1>
 					Bienvenue,
 					<span class="fw-semibold fst-italic">
-						Romain Fillot
+						{{ user.username }}
 					</span>
 				</h1>
 				<div class="row gx-4 mt-3">
@@ -37,7 +37,7 @@
 									</div>
 								</div>
 								<div class="col-4 text-center border-1">
-									0€
+									{{ user.currency }}
 									<br>
 									Argent disponible
 								</div>
@@ -83,7 +83,7 @@
                                     Pseudo
                                 </div>
                                 <div class="col-9">
-                                    Destroyeur6315
+                                    {{ user.username }}
                                 </div>
                                 <div class="col-3 ps-3">
                                     Adresse mail
