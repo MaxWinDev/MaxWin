@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Form\ReloadBalanceType;
 
 #[Route('/balance')]
 class BalanceController extends AbstractController
@@ -12,7 +13,7 @@ class BalanceController extends AbstractController
     #[Route('/recharge')]
     public function recharge()
     {
-        // $form = $this->createForm(RechargeBalance::class);
+        $form = $this->createForm(ReloadBalanceType::class);
 
         // $form->handleRequest($request);
         // if ($form->isSubmitted() && $form->isValid()) {
@@ -29,6 +30,8 @@ class BalanceController extends AbstractController
         //     return $this->redirectToRoute('account_recharge');
         // }
 
-        return $this->render('balance/add-balance.html.twig');
+        return $this->render('balance/add-balance.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
