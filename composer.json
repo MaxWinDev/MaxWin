@@ -24,6 +24,7 @@
         "symfony/flex": "^2",
         "symfony/form": "7.0.*",
         "symfony/framework-bundle": "7.0.*",
+        "symfony/mailer": "7.0.*",
         "symfony/property-access": "7.0.*",
         "symfony/property-info": "7.0.*",
         "symfony/runtime": "7.0.*",
@@ -31,7 +32,8 @@
         "symfony/serializer": "7.0.*",
         "symfony/twig-bundle": "7.0.*",
         "symfony/validator": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/yaml": "7.0.*",
+        "symfonycasts/verify-email-bundle": "^1.17"
     },
     "config": {
         "allow-plugins": {
