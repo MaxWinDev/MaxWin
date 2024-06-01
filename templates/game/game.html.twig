@@ -89,8 +89,10 @@
         ];
         const images = [];
         const spinSpeed = 0.2; // Vitesse de rotation constante pour chaque spin
-        const stopSpeed = 0.0000001; // Vitesse à laquelle les colonnes s'arrêtent
+        const stopSpeed = 0.001; // Vitesse à laquelle les colonnes s'arrêtent
         const stopDelay = 1000; // Délai d'arrêt pour chaque colonne
+        const spinDelay = 500; // Délai entre le début du spin et l'arrêt de la première colonne
+        const columnDelay = 200; // Délai initial pour chaque colonne
         let positions = Array.from({ length: cols }, () => Math.floor(Math.random() * symbols.length));
         let speeds = Array(cols).fill(0);
         let spinning = Array(cols).fill(false);
@@ -174,16 +176,27 @@
                     animationID = requestAnimationFrame(animate);
                 }
 
-                for (let col = 0; col < cols; col++) {
-                    speeds[col] = spinSpeed; // Set constant speed for each column
-                    spinning[col] = true;
+                function startNextColumn(col) {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            speeds[col] = spinSpeed; // Vitesse de rotation constante pour chaque colonne
+                            spinning[col] = true;
+                            animate();
+                            resolve();
+                        }, columnDelay * col);
+                    });
                 }
-                animate();
+
+                setTimeout(() => {
+                    for (let col = 0; col < cols; col++) {
+                        startNextColumn(col);
+                    }
+                }, spinDelay);
             });
         }
 
         document.getElementById('spin').addEventListener('click', async () => {
-            if (spinning.some(s => s)) return; // Prevent multiple spins
+            if (spinning.some(s => s)) return; // Empêche plusieurs spins
 
             await spinColumns();
         });
