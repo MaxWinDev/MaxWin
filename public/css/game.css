@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.background-image {
+    background-image: url('../assets/images/fond-casino.jpg');
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    opacity: 0.7;
+    z-index: -1;
+}
+
+.content {
+    position: fixed;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 70%;
+    max-width: 1000px;
+    height: 75vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    width: 100%;
+    height: 100%;
+    gap: 0;
+    overflow: hidden;
+}
+
+.column {
+    display: flex;
+    flex-direction: column-reverse;
+    border-right: 1px solid #ccc;
+}
+
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.column:last-child {
+    border-right: none;
+}
+
+.grid-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.spin-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 75vh;
+    gap: 100px;
+}
+
+.spin-button {
+    background-color: #45a049;
+    color: white;
+    border: none;
+    padding: 5px;
+    height: 130px;
+    width: 130px;
+    box-shadow: 0 2px 4px darkslategray;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 80px;
+}
+
+.spin-button:active {
+    box-shadow: 0 0 2px darkslategray;
+    transform: translateY(2px);
+}
+
+.spin-button span {
+    font-weight: normal;
+    font-size: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auto-spin-button {
+    background-color: #45a049;
+    color: white;
+    border: none;
+    padding: 5px;
+    height: 80px;
+    width: 80px;
+    box-shadow: 0 2px 4px darkslategray;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 80px;
+}
+
+.auto-spin-button span {
+    font-weight: normal;
+    font-size: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auto-spin-button:active {
+    box-shadow: 0 0 2px darkslategray;
+    transform: translateY(2px);
+}
+
+.fast-spin-button {
+    background-color: #45a049;
+    color: white;
+    border: none;
+    padding: 5px;
+    height: 80px;
+    width: 80px;
+    box-shadow: 0 2px 4px darkslategray;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 80px;
+}
+
+.fast-spin-button span {
+    font-weight: normal;
+    font-size: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fast-spin-button:active {
+    box-shadow: 0 0 2px darkslategray;
+    transform: translateY(2px);
+}
+
+@keyframes spin {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+
+
