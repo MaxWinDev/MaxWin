@@ -78,15 +78,19 @@
         const colWidth = canvas.width / cols;
         const rowHeight = canvas.height / rows;
         const symbols = [
-        '../assets/images/cerise.png',
-        '../assets/images/citron.png',
-        '../assets/images/pasteque.png',
-        '../assets/images/gold.png',
-        '../assets/images/7.png',
-        '../assets/images/max.png',
-        '../assets/images/prune.png',
-        '../assets/images/fraise.png',];
+            '../assets/images/cerise.png',
+            '../assets/images/citron.png',
+            '../assets/images/pasteque.png',
+            '../assets/images/gold.png',
+            '../assets/images/7.png',
+            '../assets/images/max.png',
+            '../assets/images/prune.png',
+            '../assets/images/fraise.png',
+        ];
         const images = [];
+        const spinSpeed = 0.2; // Vitesse de rotation constante pour chaque spin
+        const stopSpeed = 0.0000001; // Vitesse à laquelle les colonnes s'arrêtent
+        const stopDelay = 1000; // Délai d'arrêt pour chaque colonne
         let positions = Array.from({ length: cols }, () => Math.floor(Math.random() * symbols.length));
         let speeds = Array(cols).fill(0);
         let spinning = Array(cols).fill(false);
@@ -95,7 +99,7 @@
             let loadedImages = 0;
             for (let i = 0; i < symbols.length; i++) {
                 images[i] = new Image();
-                images[i].src = '/images/' + symbols[i];
+                images[i].src = symbols[i];
                 images[i].onload = () => {
                     loadedImages++;
                     if (loadedImages === symbols.length) {
@@ -108,7 +112,7 @@
         function drawGrid() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let col = 0; col < cols; col++) {
-                for (let row = 0; row < rows + 2; row++) { // draw an extra row for smooth scrolling
+                for (let row = 0; row < rows + 2; row++) { // Dessine une rangée supplémentaire pour un défilement plus fluide
                     const yPos = (positions[col] + row) % symbols.length;
                     const imgIndex = Math.floor(yPos) % symbols.length;
                     const img = images[imgIndex];
@@ -116,7 +120,7 @@
                     ctx.drawImage(img, col * colWidth, canvas.height - (row + 1) * rowHeight + yOffset, colWidth, rowHeight);
                 }
             }
-            // Draw column separators
+            // Dessine les séparateurs de colonnes
             for (let col = 1; col < cols; col++) {
                 ctx.beginPath();
                 ctx.moveTo(col * colWidth, 0);
@@ -125,48 +129,63 @@
             }
         }
 
-        function spinColumn(col, stopDelay) {
-            return new Promise((resolve) => {
-                let stop = false;
-                spinning[col] = true;
-                speeds[col] = 1; // initial speed
-                const spinInterval = setInterval(() => {
-                    if (stop) {
-                        clearInterval(spinInterval);
-                        spinning[col] = false;
-                        positions[col] = Math.floor(positions[col]) % symbols.length; // align symbols
-                        drawGrid();
+        async function spinColumns() {
+            return new Promise(resolve => {
+                let animationID;
+                let stopColumn = 0;
+
+                function animate() {
+                    if (stopColumn >= cols) {
+                        cancelAnimationFrame(animationID);
                         resolve();
                         return;
                     }
-                    positions[col] += speeds[col]; // control speed of spin
-                    if (speeds[col] > 0.1) { // gradually slow down
-                        speeds[col] *= 0.97; // deceleration factor
-                    } else {
-                        speeds[col] = 0;
-                        stop = true;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let col = 0; col < cols; col++) {
+                        for (let row = 0; row < rows + 2; row++) { // Dessine une rangée supplémentaire pour un défilement plus fluide
+                            const yPos = (positions[col] + row) % symbols.length;
+                            const imgIndex = Math.floor(yPos) % symbols.length;
+                            const img = images[imgIndex];
+                            const yOffset = (positions[col] % 1) * rowHeight;
+                            ctx.drawImage(img, col * colWidth, canvas.height - (row + 1) * rowHeight + yOffset, colWidth, rowHeight);
+                        }
+                        if (!spinning[col] && stopColumn === col) {
+                            stopColumn++;
+                            continue;
+                        }
+                        positions[col] += speeds[col];
+                        if (speeds[col] > stopSpeed) { // Gradually slow down
+                            speeds[col] -= 0.001; // Deceleration factor
+                        } else {
+                            if (positions[col] % 1 !== 0) { // Align position to stop exactly at a symbol
+                                positions[col] = Math.round(positions[col]);
+                            }
+                            speeds[col] = 0;
+                            spinning[col] = false;
+                        }
                     }
-                    drawGrid();
-                }, 20);
+                    // Dessine les séparateurs de colonnes
+                    for (let col = 1; col < cols; col++) {
+                        ctx.beginPath();
+                        ctx.moveTo(col * colWidth, 0);
+                        ctx.lineTo(col * colWidth, canvas.height);
+                        ctx.stroke();
+                    }
+                    animationID = requestAnimationFrame(animate);
+                }
 
-                setTimeout(() => {
-                    stop = true;
-                }, stopDelay);
+                for (let col = 0; col < cols; col++) {
+                    speeds[col] = spinSpeed; // Set constant speed for each column
+                    spinning[col] = true;
+                }
+                animate();
             });
         }
 
         document.getElementById('spin').addEventListener('click', async () => {
-            if (spinning.some(s => s)) return; // prevent multiple spins
+            if (spinning.some(s => s)) return; // Prevent multiple spins
 
-            // Start spinning all columns at once
-            const promises = [];
-            for (let col = 0; col < cols; col++) {
-                const stopDelay = col > 0 ? 1000 + col * 500 : 1000; // adjust stop delay based on column index
-                promises.push(spinColumn(col, stopDelay));
-            }
-
-            // Wait for all columns to stop spinning
-            await Promise.all(promises);
+            await spinColumns();
         });
 
         loadImages(drawGrid);
