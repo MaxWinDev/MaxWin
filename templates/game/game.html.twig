@@ -89,9 +89,8 @@
         ];
         const images = [];
         const spinSpeed = 0.2; // Vitesse de rotation constante pour chaque spin
-        const stopSpeed = 0.001; // Vitesse à laquelle les colonnes s'arrêtent
+        const stopSpeed = 0.00001; // Vitesse à laquelle les colonnes s'arrêtent
         const stopDelay = 1000; // Délai d'arrêt pour chaque colonne
-        const spinDelay = 500; // Délai entre le début du spin et l'arrêt de la première colonne
         const columnDelay = 200; // Délai initial pour chaque colonne
         let positions = Array.from({ length: cols }, () => Math.floor(Math.random() * symbols.length));
         let speeds = Array(cols).fill(0);
@@ -183,15 +182,13 @@
                             spinning[col] = true;
                             animate();
                             resolve();
-                        }, columnDelay * col);
+                        }, col * columnDelay);
                     });
                 }
 
-                setTimeout(() => {
-                    for (let col = 0; col < cols; col++) {
-                        startNextColumn(col);
-                    }
-                }, spinDelay);
+                for (let col = 0; col < cols; col++) {
+                    startNextColumn(col);
+                }
             });
         }
 
@@ -204,6 +201,7 @@
         loadImages(drawGrid);
     });
 </script>
+
 </body>
 </html>
 
