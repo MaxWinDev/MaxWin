@@ -1,0 +1,14 @@
+<h1>Bonjour, {{ username }}</h1>
+
+<p>
+    Merci de confirmer votre addresse email en cliquant sur le lien suivant : <br><br>
+    <a href="{{ pah('app_verify_email', {token: token}) }}">Confirmez votre email</a>.
+    Le lien expiera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+</p>
+
+<p>
+    Si vous n'avez pas demandé cette confirmation, vous pouvez ignorer cet email.
+</p>
+<br>
+<br>
+<p>L'équipe MaxWin</p>
