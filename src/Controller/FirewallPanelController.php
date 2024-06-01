@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class FirewallPanelController extends AbstractController
 {
-    #[Route('/firewall/panel', name: 'app_firewall_panel')]
+    #[Route('/firewall/panel', name: 'app_firewall_panel_1')]
     public function panel()
     {
         $panel = new \Shieldon\Firewall\Panel();
@@ -22,11 +22,11 @@ class FirewallPanelController extends AbstractController
         exit;
     }
 
-    // #[Route('/firewall/panel/{class}/{method}', name: 'app_firewall_panel')]
-    // public function page(string $class, string $method): Response
-    // {
-    //     $this->panel($class, $method);
+    #[Route('/firewall/panel/{class<\D+>}/{method<\D+>}', name: 'app_firewall_panel_2')]
+    public function page(string $class, string $method): Response
+    {
+        $this->panel($class, $method);
 
-    //     return new Response();
-    // }
+        return new Response();
+    }
 }
