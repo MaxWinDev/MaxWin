@@ -1,140 +1,273 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/** {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.background-image {
-    background-image: url('../assets/images/fond-casino.jpg');
-    height: 100%;
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
+/*.background-image {*/
+/*    background-image: url('../assets/symbols/fond-casino.jpg');*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*    background-position: center;*/
+/*    background-repeat: no-repeat;*/
+/*    background-size: cover;*/
+/*    position: fixed;*/
+/*    opacity: 0.7;*/
+/*    z-index: -1;*/
+/*}*/
+
+/*.content {*/
+/*    position: fixed;*/
+/*    z-index: 1;*/
+/*    color: white;*/
+/*    text-align: center;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+/*#casinoCanvas {*/
+/*    background-color: rgba(0, 0, 0, 0.7);*/
+/*    width: 1500px;*/
+/*    max-width: 1000px;*/
+/*    height: 75vh;*/
+/*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*.spin-container {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    height: 75vh;*/
+/*    gap: 100px;*/
+/*}*/
+
+/*.spin-button {*/
+/*    background-color: #45a049;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px;*/
+/*    height: 130px;*/
+/*    width: 130px;*/
+/*    box-shadow: 0 2px 4px darkslategray;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.2s ease;*/
+/*    margin-left: 80px;*/
+/*}*/
+
+/*.spin-button:active {*/
+/*    box-shadow: 0 0 2px darkslategray;*/
+/*    transform: translateY(2px);*/
+/*}*/
+
+/*.spin-button span {*/
+/*    font-weight: normal;*/
+/*    font-size: 100px;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.auto-spin-button {*/
+/*    background-color: #45a049;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px;*/
+/*    height: 80px;*/
+/*    width: 80px;*/
+/*    box-shadow: 0 2px 4px darkslategray;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.2s ease;*/
+/*    margin-left: 80px;*/
+/*}*/
+
+/*.auto-spin-button span {*/
+/*    font-weight: normal;*/
+/*    font-size: 60px;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.auto-spin-button:active {*/
+/*    box-shadow: 0 0 2px darkslategray;*/
+/*    transform: translateY(2px);*/
+/*}*/
+
+/*.fast-spin-button {*/
+/*    background-color: #45a049;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px;*/
+/*    height: 80px;*/
+/*    width: 80px;*/
+/*    box-shadow: 0 2px 4px darkslategray;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.2s ease;*/
+/*    margin-left: 80px;*/
+/*}*/
+
+/*.fast-spin-button span {*/
+/*    font-weight: normal;*/
+/*    font-size: 60px;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.fast-spin-button:active {*/
+/*    box-shadow: 0 0 2px darkslategray;*/
+/*    transform: translateY(2px);*/
+/*}*/
+
+/*.plus-button, .less-button {*/
+/*    background-color: black;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 5px;*/
+/*    height: 40px;*/
+/*    width: 40px;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    transition: transform 0.2s;*/
+/*}*/
+
+/*.plus-button:active,*/
+/*.less-button:active {*/
+/*    transform: scale(0.8); !* Réduit temporairement la taille des boutons lorsqu'ils sont enfoncés *!*/
+/*}*/
+
+/*canvas {*/
+/*    border: 1px solid white;*/
+/*    display: block;*/
+/*}*/
+
+/*.under-canvas {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    justify-content: space-between;*/
+/*    background-color: rgba(0, 0, 0, 0.7);*/
+/*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);*/
+/*    font-size: 30px;*/
+/*    border: 1px solid white;*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/*.under-canvas > * {*/
+/*    margin-left: 50px;*/
+/*    margin-right: 50px;*/
+/*}*/
+
+/*.under-canvas-item {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: flex-start;*/
+/*    align-items: center;*/
+/*    margin-top: 5px;*/
+/*}*/
+
+/*.bet-buttons {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    gap: 10px;*/
+/*}*/
+
+body {
+    width: 100vw;
+    height: 100vh;
+    padding: 1rem;
+    background-image: url("../assets/symbols/fond-casino.jpg");
     background-size: cover;
-    position: fixed;
-    opacity: 0.7;
-    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }
 
-.content {
-    position: fixed;
-    z-index: 1;
-    color: white;
-    text-align: center;
-    width: 100%;
+@media only screen and (max-width: 1200px) {
+    body {
+        background-image: url("../assets/symbols/fond-casino.jpg");
+    }
+}
+
+#reels {
+    display: flex;
+    width: 100vw;
+    height: calc((3 / 5) * 100vw);
+    max-height: calc(90vh - 50px - 40px);
+    max-width: calc((5 / 3) * (90vh - 50px - 40px));
+}
+
+.reel {
+    overflow: hidden;
+    width: 20%;
     height: 100%;
+    position: relative;
+}
+
+.reel > .icons {
+    position: relative;
+}
+
+.reel > .icons > img {
+    width: calc(100% + 6px);
+    margin: -3px 0 0 -3px;
+    height: auto;
+
+    /* enable gpu accelaration, fixes iOS flicker */
+    transform: translate3d(0, 0, 0);
+}
+
+#controls {
+    background-color: rgba(255, 255, 255, 0.9);
+    height: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 5px 30px;
 }
 
-.game-container {
-    background-color: rgba(0, 0, 0, 0.7);
-    width: 70%;
-    max-width: 1000px;
-    height: 75vh;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.spin-container {
+#controls label {
     display: flex;
     align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    height: 75vh;
-    gap: 100px;
+    margin: 0;
 }
 
-.spin-button {
-    background-color: #45a049;
-    color: white;
-    border: none;
-    padding: 5px;
-    height: 130px;
-    width: 130px;
-    box-shadow: 0 2px 4px darkslategray;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-left: 80px;
+#controls label input {
+    margin-right: 5px;
 }
 
-.spin-button:active {
-    box-shadow: 0 0 2px darkslategray;
-    transform: translateY(2px);
+input[type="checkbox"] {
+    width: 40px;
+    height: 40px;
 }
 
-.spin-button span {
-    font-weight: normal;
-    font-size: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#jackpot {
+    color: #d5ad6d;
+    font-size: 40px;
+    text-align: center;
 }
 
-.auto-spin-button {
-    background-color: #45a049;
-    color: white;
-    border: none;
-    padding: 5px;
-    height: 80px;
-    width: 80px;
-    box-shadow: 0 2px 4px darkslategray;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-left: 80px;
+#slot.inverted .reel {
+    transform: scaleY(-1);
 }
 
-.auto-spin-button span {
-    font-weight: normal;
-    font-size: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#slot.inverted .reel > .icons > img {
+    transform: scaleY(-1);
 }
 
-.auto-spin-button:active {
-    box-shadow: 0 0 2px darkslategray;
-    transform: translateY(2px);
-}
-
-.fast-spin-button {
-    background-color: #45a049;
-    color: white;
-    border: none;
-    padding: 5px;
-    height: 80px;
-    width: 80px;
-    box-shadow: 0 2px 4px darkslategray;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-left: 80px;
-}
-
-.fast-spin-button span {
-    font-weight: normal;
-    font-size: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.fast-spin-button:active {
-    box-shadow: 0 0 2px darkslategray;
-    transform: translateY(2px);
-}
-
-canvas {
-    border: 1px solid black;
-    display: block;
-    margin: 0 auto;
-}
 
 
 
