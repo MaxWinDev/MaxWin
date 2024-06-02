@@ -80,21 +80,39 @@
 
 {% block body %}
     <div id="slot">
-        <div id="jackpot">Jackpot: <span id="jp">5.555.555</span></div>
-        <div id="reels">
-            <div class="reel"></div>
-            <div class="reel"></div>
-            <div class="reel"></div>
-            <div class="reel"></div>
-            <div class="reel"></div>
+{#        <div id="jackpot">Jackpot: <span id="jp">5.555.555</span></div>#}
+        <div style="display: flex; flex-direction: row">
+            <div id="reels">
+                <div class="reel"></div>
+                <div class="reel"></div>
+                <div class="reel"></div>
+                <div class="reel"></div>
+                <div class="reel"></div>
+            </div>
+            <div class="spin-container">
+                <button id="auto_spin_button" class="auto-spin-button">
+                    <span class="material-symbols-outlined">
+                        hdr_auto
+                    </span>
+                </button>
+                <button id="spin-button" class="spin-button">
+                    <span class="material-symbols-outlined">
+                        autorenew
+                    </span>
+                </button>
+                <button class="fast-spin-button">
+                    <span class="material-symbols-outlined">
+                        offline_bolt
+                    </span>
+                </button>
+            </div>
         </div>
-        <div id="controls">
-            <button type="button" id="spin">SPIN</button>
-            <label>
-                <input type="checkbox" name="autoplay" id="autoplay" />
-                Autoplay
-            </label>
-        </div>
+{#        <div id="controls">#}
+{#            <label>#}
+{#                <input type="checkbox" name="autoplay" id="autoplay" />#}
+{#                Autoplay#}
+{#            </label>#}
+{#        </div>#}
     </div>
 {% endblock %}
 

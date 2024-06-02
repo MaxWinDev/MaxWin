@@ -145,10 +145,11 @@ class Slot {
                 new Reel(reelContainer, idx, this.currentSymbols[idx])
         );
 
-        this.spinButton = this.container.querySelector("#spin");
+        this.spinButton = this.container.querySelector("#spin-button");
         this.spinButton.addEventListener("click", () => this.spin());
 
-        this.autoPlayCheckbox = this.container.querySelector("#autoplay");
+        this.autoSpinButton = this.container.querySelector("#auto_spin_button");
+        this.autoSpinButton.addEventListener("click", () => this.toggleAutoSpin());
 
         if (config.inverted) {
             this.container.classList.add("inverted");
@@ -183,12 +184,23 @@ class Slot {
         this.config.onSpinStart?.(symbols);
     }
 
+    toggleAutoSpin() {
+        // Inversez l'état de l'auto-spin et mettez à jour le texte du bouton
+        this.autoSpinEnabled = !this.autoSpinEnabled;
+        this.autoSpinButton.style.backgroundColor = this.autoSpinEnabled ? "#ff4136" : "#45a049";
+
+        // Si l'auto-spin est activé, déclenchez la fonction de spin automatique
+        if (this.autoSpinEnabled) {
+            this.spin();
+        }
+    }
+
     onSpinEnd(symbols) {
         this.spinButton.disabled = false;
 
         this.config.onSpinEnd?.(symbols);
 
-        if (this.autoPlayCheckbox.checked) {
+        if (this.autoSpinEnabled) {
             return window.setTimeout(() => this.spin(), 200);
         }
     }
