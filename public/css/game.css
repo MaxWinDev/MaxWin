@@ -129,60 +129,6 @@
     transform: translateY(2px);
 }
 
-/*.plus-button, .less-button {*/
-/*    background-color: black;*/
-/*    color: white;*/
-/*    border: none;*/
-/*    padding: 5px;*/
-/*    height: 40px;*/
-/*    width: 40px;*/
-/*    border-radius: 50%;*/
-/*    cursor: pointer;*/
-/*    transition: transform 0.2s;*/
-/*}*/
-
-/*.plus-button:active,*/
-/*.less-button:active {*/
-/*    transform: scale(0.8); !* Réduit temporairement la taille des boutons lorsqu'ils sont enfoncés *!*/
-/*}*/
-
-/*canvas {*/
-/*    border: 1px solid white;*/
-/*    display: block;*/
-/*}*/
-
-/*.under-canvas {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    justify-content: space-between;*/
-/*    background-color: rgba(0, 0, 0, 0.7);*/
-/*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);*/
-/*    font-size: 30px;*/
-/*    border: 1px solid white;*/
-/*    margin-top: 10px;*/
-/*}*/
-
-/*.under-canvas > * {*/
-/*    margin-left: 50px;*/
-/*    margin-right: 50px;*/
-/*}*/
-
-/*.under-canvas-item {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: flex-start;*/
-/*    align-items: center;*/
-/*    margin-top: 5px;*/
-/*}*/
-
-/*.bet-buttons {*/
-/*    display: flex;*/
-/*    flex-direction: row;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    gap: 10px;*/
-/*}*/
-
 body {
     width: 100vw;
     height: 100vh;

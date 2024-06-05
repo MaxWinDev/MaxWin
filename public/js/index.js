@@ -37,13 +37,16 @@ class Symbol {
 }
 
 class Reel {
-    constructor(reelContainer, idx, initialSymbols) {
+    constructor(reelContainer, idx, initialSymbols, fastSpinEnabled = false) {
         this.reelContainer = reelContainer;
         this.idx = idx;
+        this.fastSpinEnabled = fastSpinEnabled;
 
         this.symbolContainer = document.createElement("div");
         this.symbolContainer.classList.add("icons");
         this.reelContainer.appendChild(this.symbolContainer);
+
+        const duration = this.fastSpinEnabled ? 200 : this.factor * 1000;
 
         this.animation = this.symbolContainer.animate(
             [
@@ -60,14 +63,14 @@ class Reel {
                 },
             ],
             {
-                duration: this.factor * 1000,
+                duration: duration,
                 easing: "ease-in-out",
             }
         );
         this.animation.cancel();
 
         initialSymbols.forEach((symbol) =>
-            this.symbolContainer.appendChild(new Symbol(symbol).img)
+            this.symbolContainer.appendChild(new Symbol(symbol).img),
         );
     }
 
@@ -142,14 +145,17 @@ class Slot {
 
         this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
             (reelContainer, idx) =>
-                new Reel(reelContainer, idx, this.currentSymbols[idx])
+                new Reel(reelContainer, idx, this.currentSymbols[idx], false)
         );
 
-        this.spinButton = this.container.querySelector("#spin-button");
+        this.spinButton = this.container.querySelector("#spin_button");
         this.spinButton.addEventListener("click", () => this.spin());
 
         this.autoSpinButton = this.container.querySelector("#auto_spin_button");
         this.autoSpinButton.addEventListener("click", () => this.toggleAutoSpin());
+
+        this.fastSpinButton = this.container.querySelector("#fast_spin_button");
+        this.fastSpinButton.addEventListener("click", () => this.fastSpin());
 
         if (config.inverted) {
             this.container.classList.add("inverted");
@@ -180,23 +186,60 @@ class Slot {
 
     onSpinStart(symbols) {
         this.spinButton.disabled = true;
+        this.isSpinning = true;
 
         this.config.onSpinStart?.(symbols);
     }
 
     toggleAutoSpin() {
-        // Inversez l'état de l'auto-spin et mettez à jour le texte du bouton
         this.autoSpinEnabled = !this.autoSpinEnabled;
         this.autoSpinButton.style.backgroundColor = this.autoSpinEnabled ? "#ff4136" : "#45a049";
 
-        // Si l'auto-spin est activé, déclenchez la fonction de spin automatique
-        if (this.autoSpinEnabled) {
+        if (this.autoSpinEnabled && !this.isSpinning) {
             this.spin();
+        }
+    }
+
+    fastSpin() {
+        this.fastSpinEnabled = !this.fastSpinEnabled;
+        this.fastSpinButton.style.backgroundColor = this.fastSpinEnabled ? "#ff4136" : "#45a049";
+
+        console.dir(`isSpinning : ${this.isSpinning}`);
+        console.dir(`Fast spin : ${this.fastSpinEnabled}`);
+
+        if(this.fastSpinEnabled && !this.isSpinning) {
+            this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
+                (reelContainer, idx) => {
+                    reelContainer.innerHTML = "";
+                    return new Reel(reelContainer, idx, this.currentSymbols[idx], this.fastSpinEnabled);
+                }
+            );
+        } else if(!this.fastSpinEnabled && !this.isSpinning) {
+            this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
+                (reelContainer, idx) => {
+                    reelContainer.innerHTML = "";
+                    return new Reel(reelContainer, idx, this.currentSymbols[idx], this.fastSpinEnabled);
+                }
+            );
+        } else {
+            if(this.isSpinning) {
+                this.reels.forEach((reel) => {
+                    reel.animation.cancel();
+                    reel.animation.finish();
+                });
+            }
+            this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
+                (reelContainer, idx) => {
+                    reelContainer.innerHTML = "";
+                    return new Reel(reelContainer, idx, this.currentSymbols[idx], this.fastSpinEnabled);
+                }
+            );
         }
     }
 
     onSpinEnd(symbols) {
         this.spinButton.disabled = false;
+        this.isSpinning = false;
 
         this.config.onSpinEnd?.(symbols);
 
@@ -207,12 +250,12 @@ class Slot {
 }
 
 const config = {
-    inverted: false, // true: reels spin from top to bottom; false: reels spin from bottom to top
+    inverted: true, // true: reels spin from top to bottom; false: reels spin from bottom to top
     onSpinStart: (symbols) => {
-        console.log("onSpinStart", symbols);
+        // console.log("onSpinStart", symbols);
     },
     onSpinEnd: (symbols) => {
-        console.log("onSpinEnd", symbols);
+        // console.log("onSpinEnd", symbols);
     },
 };
 
