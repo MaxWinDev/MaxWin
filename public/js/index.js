@@ -204,9 +204,6 @@ class Slot {
         this.fastSpinEnabled = !this.fastSpinEnabled;
         this.fastSpinButton.style.backgroundColor = this.fastSpinEnabled ? "#ff4136" : "#45a049";
 
-        console.dir(`isSpinning : ${this.isSpinning}`);
-        console.dir(`Fast spin : ${this.fastSpinEnabled}`);
-
         if(this.fastSpinEnabled && !this.isSpinning) {
             this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
                 (reelContainer, idx) => {
@@ -214,20 +211,11 @@ class Slot {
                     return new Reel(reelContainer, idx, this.currentSymbols[idx], this.fastSpinEnabled);
                 }
             );
-        } else if(!this.fastSpinEnabled && !this.isSpinning) {
-            this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
-                (reelContainer, idx) => {
-                    reelContainer.innerHTML = "";
-                    return new Reel(reelContainer, idx, this.currentSymbols[idx], this.fastSpinEnabled);
-                }
-            );
         } else {
-            if(this.isSpinning) {
-                this.reels.forEach((reel) => {
-                    reel.animation.cancel();
-                    reel.animation.finish();
-                });
-            }
+            this.reels.forEach((reel) => {
+                reel.animation.cancel();
+                reel.animation.finish();
+            });
             this.reels = Array.from(this.container.getElementsByClassName("reel")).map(
                 (reelContainer, idx) => {
                     reelContainer.innerHTML = "";
@@ -235,6 +223,20 @@ class Slot {
                 }
             );
         }
+    }
+
+    transformMatrix(matrix) {
+        const numRows = matrix[0].length;
+        const numCols = matrix.length;
+        const transformed = Array.from({ length: numRows }, () => []);
+
+        for (let col = 0; col < numCols; col++) {
+            for (let row = numRows - 1; row >= 0; row--) {
+                transformed[numRows - 1 - row].push(matrix[col][row]);
+            }
+        }
+
+        return transformed;
     }
 
     onSpinEnd(symbols) {
@@ -243,18 +245,46 @@ class Slot {
 
         this.config.onSpinEnd?.(symbols);
 
+        // Transformation de la matrice pour avoir les symboles dans le bon ordre par colonnes et par lignes
+        const transformedMatrix = this.transformMatrix(symbols);
+
+        this.sendResults(transformedMatrix);
+
         if (this.autoSpinEnabled) {
             return window.setTimeout(() => this.spin(), 200);
         }
+    }
+
+    sendResults(symbols) {
+        console.log('Envoi des résultats au serveur:', symbols);
+        fetch('http://localhost:8000/game/check_wins', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ symbols: symbols })
+        })
+            .then(response => {
+                console.log('Réponse reçue:', response);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Succès:', data);
+            })
+            .catch((error) => {
+                console.error('Erreur:', error);
+            });
     }
 }
 
 const config = {
     inverted: true, // true: reels spin from top to bottom; false: reels spin from bottom to top
     onSpinStart: (symbols) => {
+        return symbols;
         // console.log("onSpinStart", symbols);
     },
     onSpinEnd: (symbols) => {
+        return symbols;
         // console.log("onSpinEnd", symbols);
     },
 };
