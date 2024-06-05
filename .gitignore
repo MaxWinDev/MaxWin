@@ -63,3 +63,19 @@
 
 ###> symfony/lexik-jwt-authentication-bundle ###
 /config/jwt/*
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+### shieldon
+/storage/
+
+### composer
+composer.lock
