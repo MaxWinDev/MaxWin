@@ -75,7 +75,7 @@
 ###< phpunit/phpunit ###
 
 ### shieldon
-/storage/
+/storage/*
 
 ### composer
 composer.lock
