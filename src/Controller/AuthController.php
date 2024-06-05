@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/auth')]
@@ -26,7 +27,8 @@ class AuthController extends AbstractController
     public function __construct(
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly JWTTokenManagerInterface    $jwtManager,
-        private readonly MailerService               $mailerService
+        private readonly MailerService               $mailerService,
+        private readonly EntityManagerInterface      $entityManager
     )
     {
     }
@@ -106,17 +108,23 @@ class AuthController extends AbstractController
      * @throws JWTFailureException
      */
     #[Route('/verify/{token}', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, $token): Response
+    public function verifyUserEmail(TokenInterface $token): Response
     {
         try {
             // on vérifie si le token est valide (cohérent, pas expiré et signature correcte)
-            $jwtDecode = $this->jwtManager->decode($token);
-            dd($jwtDecode);
+            $user = $token->getUser();
+            if($user instanceof User && $user->isVerified() === false) {
+                $user->setVerified(true);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
         } catch (\Exception $e) {
             throw new JWTFailureException(
                 'Error during the email verify process',
                 $e->getMessage()
             );
         }
+
+        return $this->redirectToRoute('app_profil');
     }
 }

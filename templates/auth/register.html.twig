@@ -7,10 +7,10 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
+    {# templates/auth/register.html.twig #}
+
     <h1>Inscription</h1>
-
     {{ form_errors(registrationForm) }}
-
     {{ form_start(registrationForm) }}
     {{ form_row(registrationForm.email) }}
     {{ form_row(registrationForm.username) }}
