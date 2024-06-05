@@ -70,4 +70,4 @@
 /storage/
 
 ### composer 
-composer.lock
+./composer.lock
