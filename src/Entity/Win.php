@@ -23,7 +23,7 @@ class Win
     private ?string $machineName = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'wins')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, name: 'user_id', referencedColumnName: 'id_utilisateur', onDelete: 'CASCADE')]
     private ?User $user = null;
 
     public function getId(): ?int
@@ -36,7 +36,7 @@ class Win
         return $this->bet;
     }
 
-    public function setBet(string $bet): static
+    public function setBet(string $bet): self
     {
         $this->bet = $bet;
 
@@ -48,7 +48,7 @@ class Win
         return $this->amount;
     }
 
-    public function setAmount(string $amount): static
+    public function setAmount(string $amount): self
     {
         $this->amount = $amount;
 
@@ -60,7 +60,7 @@ class Win
         return $this->machineName;
     }
 
-    public function setMachineName(string $machineName): static
+    public function setMachineName(string $machineName): self
     {
         $this->machineName = $machineName;
 
@@ -72,7 +72,7 @@ class Win
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
