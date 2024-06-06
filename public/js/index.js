@@ -314,10 +314,7 @@ class Slot {
                 console.error('Erreur:', error);
             });
     }
-    if (this.autoSpinEnabled) {
-      return window.setTimeout(() => this.spin(), 200);
-    }
-  }
+  
 
   checkForWin(symbolsMatrix) {
     const wins = {};
@@ -357,17 +354,18 @@ class Slot {
   }
 }
 
-const config = {
-    inverted: true, // true: reels spin from top to bottom; false: reels spin from bottom to top
-    onSpinStart: (symbols) => {
-        return symbols;
-        // console.log("onSpinStart", symbols);
-    },
-    onSpinEnd: (symbols) => {
-        return symbols;
-        // console.log("onSpinEnd", symbols);
-    },
-};
+
+  const config = {
+      inverted: true, // true: reels spin from top to bottom; false: reels spin from bottom to top
+      onSpinStart: (symbols) => {
+          return symbols;
+          // console.log("onSpinStart", symbols);
+      },
+      onSpinEnd: (symbols) => {
+          return symbols;
+          // console.log("onSpinEnd", symbols);
+      },
+  };
 
 document.addEventListener("DOMContentLoaded", function () {
   const slot = new Slot(document.getElementById("slot"), config);
