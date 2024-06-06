@@ -4,26 +4,31 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
 use App\Security\UsersAuthenticator;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 #[Route('/auth')]
 class AuthController extends AbstractController
 {
+
     public function __construct(
-        private readonly EmailVerifier $emailVerifier,
-        private readonly UserPasswordHasherInterface $userPasswordHasher
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly JWTTokenManagerInterface    $jwtManager,
+        private readonly MailerService               $mailerService,
+        private readonly EntityManagerInterface      $entityManager
     )
     {
     }
@@ -31,9 +36,9 @@ class AuthController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
-             return $this->redirectToRoute('app_home');
-         }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -68,22 +73,28 @@ class AuthController extends AbstractController
                 )
             );
 
-            // init currency
+            // init currency to 0
             $user->setCurrency(0);
 
+            // save the user into
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('MaxWin@gmail.com', 'MaxWin Mail Bot'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('email/confirmation_email.html.twig')
+            // On génère le token JWT pour la vérification de l'adresse emails avec le jwt lexik bundle
+            $token = $this->jwtManager->createFromPayload($user, ['action' => 'confirm_email']);
+
+            // On envoie un emails de confirmation à l'utilisateur
+            $this->mailerService->sendEmail(
+                $user->getEmail(),
+                'Confirmation de votre addresse email',
+                'emails/confirmation_email.html.twig',
+                [
+                    'token' => $token,
+                    'username' => $user->getUsername(),
+                ]
             );
 
-            // do anything else you need here, like send an email
+            // do anything else you need here, like send an emails
 
             return $security->login($user, UsersAuthenticator::class, 'app');
         }
@@ -93,23 +104,27 @@ class AuthController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request): Response
+    /**
+     * @throws JWTFailureException
+     */
+    #[Route('/verify/{token}', name: 'app_verify_email')]
+    public function verifyUserEmail(TokenInterface $token): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
-            return $this->redirectToRoute('app_register');
+            // on vérifie si le token est valide (cohérent, pas expiré et signature correcte)
+            $user = $token->getUser();
+            if($user instanceof User && $user->isVerified() === false) {
+                $user->setVerified(true);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
+        } catch (\Exception $e) {
+            throw new JWTFailureException(
+                'Error during the email verify process',
+                $e->getMessage()
+            );
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_profil');
     }
 }

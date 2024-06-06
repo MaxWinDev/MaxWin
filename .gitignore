@@ -56,6 +56,14 @@
 
 #IDE
 .idea
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> symfony/lexik-jwt-authentication-bundle ###
+/config/jwt/*
+
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
 /phpunit.xml
@@ -66,8 +74,8 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-### shieldon 
-/storage/
+### shieldon
+/storage/*
 
-### composer 
+### composer
 composer.lock
