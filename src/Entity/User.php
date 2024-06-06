@@ -9,6 +9,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\Tests\Fixtures\Type;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un compte est déjà lié à cet addresse email')]
@@ -33,6 +35,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Win::class, orphanRemoval: true)]
+    private Collection $wins;
+
 
     public function getId(): ?int
     {
@@ -113,4 +119,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function __construct()
+    {
+        $this->wins = new ArrayCollection();
+    }
+
+    public function getWins(): Collection
+    {
+        return $this->wins;
+    }
+
+    public function addWin(Win $win): static
+    {
+        if (!$this->wins->contains($win)) {
+            $this->wins->add($win);
+            $win->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWin(Win $win): static
+    {
+        if ($this->wins->removeElement($win)) {
+            // set the owning side to null (unless already changed)
+            if ($win->getUser() === $this) {
+                $win->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
