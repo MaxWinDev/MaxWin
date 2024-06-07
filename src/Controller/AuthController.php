@@ -28,7 +28,7 @@ class AuthController extends AbstractController
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly JWTTokenManagerInterface    $jwtManager,
         private readonly MailerService               $mailerService,
-        private readonly EntityManagerInterface      $entityManager
+        private readonly EntityManagerInterface      $entityManager,
     )
     {
     }
@@ -49,9 +49,8 @@ class AuthController extends AbstractController
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): Response
+    public function logout(): void
     {
-        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/register', name: 'app_register')]
