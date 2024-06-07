@@ -6,13 +6,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/game')]
 class GameController extends AbstractController
 {
+    
+    public function __construct(
+        private readonly HttpClientInterface $client
+    ) {}
+    
     #[Route('/', name: 'game', methods: ['GET'])]
     public function viewGame() {
         return $this->render('game/game.html.twig');
+    }
+
+    #[Route('/send_wins', name: 'send_wins', methods: ['POST'])]
+    public function get_wins(Request $request) : Response {
+        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
@@ -53,8 +64,21 @@ class GameController extends AbstractController
             }
         }
 
-        // Retourner une réponse JSON avec les gains
-        return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
+        var_dump($wins);
+        if (count($wins) !== 0) {
+            // Envoyer les gains via une requête POST avec HttpClient, si une win est détéctée
+            $this->client->request('POST', 'http://127.0.0.1:8000/game/send_wins', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+                'body' => json_encode(['wins' => $wins]),
+            ]);
+            // Retourner une réponse JSON avec les gains
+            //return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
+        } else {
+            // Si aucun gain n'a été obtenu, retournez une réponse vide
+            return new Response('', 200);
+        }
     }
 
 
