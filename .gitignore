@@ -51,7 +51,25 @@
 # Embedded web-server pid file
 /.web-server-pid
 
+#Environnement variables
 .env
 
-.idea/
 .idea/*
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> symfony/lexik-jwt-authentication-bundle ###
+/config/jwt/*
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+### shieldon
+/storage/*
+
+### composer
+composer.lock

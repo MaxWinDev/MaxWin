@@ -1,0 +1,11 @@
+<h1>Bonjour, {{ username }}</h1>
+
+<p>
+    Merci de confirmer votre addresse email en cliquant sur le lien suivant : <br><br>
+    <a href="{{ absolute_url(path('app_verify_email', {token: token})) }}">Confirmez votre email</a>.
+</p>
+<p>
+    Si vous n'avez pas demandé cette confirmation, vous pouvez ignorer cet email.
+</p>
+<br>
+<p>L'équipe MaxWin</p>

@@ -1,0 +1,10 @@
+.page{
+    background-image: url('../image/background.png');
+    width: 100wh;
+    height: 100vh;
+    background-size: cover;
+}
+
+.filtre-noir{
+    background-color: rgba(0, 0, 0, 0.7);
+}

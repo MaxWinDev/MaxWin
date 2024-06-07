@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/auth.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+    <div class="background-image">
+        <div class="auth-block">
+            <h1>Inscription</h1>
+            {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.email) }}
+            {{ form_row(registrationForm.username) }}
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            <button type="submit" class="btn">S'inscrire</button>
+            {{ form_end(registrationForm) }}
+
+            <a href="{{ path('app_login') }}">Déjà inscrit ? Se connecter</a>
+        </div>
+
+    </div>
+{% endblock %}

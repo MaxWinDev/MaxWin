@@ -1,0 +1,105 @@
+/* public/css/add-balance.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-div {
+    background-image: url('../assets/images/balance_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.center-div {
+    background-color: rgba(0, 0, 0, 0.5); /* Couleur noire avec 50% d'opacité */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+}
+
+.center-div .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.center-div label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.center-div input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.center-div button {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.center-div button:hover {
+    background-color: #45a049;
+}
+
+/* public/css/add-balance.css */
+.center-div {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Aligne les éléments horizontalement */
+    width: 300px;
+}
+
+.center-div form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Aligne les éléments horizontalement */
+}
+
+.center-div .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center; /* Aligne le texte des labels et des inputs */
+}
+
+
+.currency-input {
+    width: calc(100% - 20px); /* Largeur de l'input de la currency */
+    padding: 10px;
+    border-radius: 5px; /* Border radius */
+    border: 1px solid #ccc; /* Ajouter une bordure */
+}
+
+label{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.form-group{
+    padding-bottom: 20%;
+}

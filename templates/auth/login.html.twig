@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/auth.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="background-image">
+        <div class="auth-block">
+            <form method="post">
+                <h1 class="h3 mb-3 font-weight-normal">Se connecter</h1>
+                <div class="input-container">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
+                           autocomplete="email" required autofocus>
+                    <label for="inputPassword">Password</label>
+                    <input type="password" name="password" id="inputPassword" class="form-control"
+                           autocomplete="current-password"
+                           required>
+
+                    <input type="hidden" name="_csrf_token"
+                           value="{{ csrf_token('authenticate') }}"
+                    >
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                        </label>
+                    </div>
+                </div>
+
+
+                {% if error %}
+                    <p class="error-message">Identifiant ou mot de passe incorrect !!!</p>
+                {% endif %}
+
+                <button class="btn btn-lg btn-primary" type="submit">
+                    Se connecter
+                </button>
+
+            </form>
+            <a href="{{ path('app_register') }}">Pas encore de compte ? Inscrivez-vous</a>
+        </div>
+    </div>
+{% endblock %}
