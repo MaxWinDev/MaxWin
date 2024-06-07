@@ -295,25 +295,26 @@ class Slot {
     }
 
     sendResults(symbols) {
-        console.log('Envoi des résultats au serveur:', symbols);
-        fetch('http://localhost:8000/game/check_wins', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ symbols: symbols })
-        })
-            .then(response => {
-                console.log('Réponse reçue:', response);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Succès:', data);
-            })
-            .catch((error) => {
-                console.error('Erreur:', error);
-            });
-    }
+      console.log('Envoi des résultats au serveur:', symbols);
+      fetch('http://localhost:8000/game/check_wins', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ symbols: symbols })
+      })
+          .then(response => {
+              console.log('Réponse reçue:', response);
+              return response.json();
+          })
+          .then(data => {
+              console.log('Succès:', data);
+          })
+          .catch((error) => {
+              console.error('Erreur:', error);
+          });
+  }
+
   
 
   checkForWin(symbolsMatrix) {

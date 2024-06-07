@@ -28,36 +28,61 @@ class GameController extends AbstractController
 
         $symbols = $data['symbols'];
 
+        // Initialiser un tableau pour stocker les résultats des gains
+        $wins = [];
+
         // Calculer les gains
         $touchingSymbols = $this->calculateWins($symbols);
 
         foreach ($touchingSymbols as $lineIndex => $indices) {
-            echo "Fruits qui se touchent sur la ligne $lineIndex : " . implode(', ', $indices) . "\n";
+            if (reset($indices) === 0) {
+                $touchingFruits = [];
+
+                // Récupérer les fruits associés aux indices dans la ligne
+                foreach ($indices as $index) {
+                    $touchingFruits[] = $symbols[$lineIndex][$index];
+                }
+
+                // Compter le nombre d'occurrences de chaque couple de fruits
+                $fruitCounts = array_count_values($touchingFruits);
+
+                // Stocker les couples fruits/nombre dans le tableau des gains
+                foreach ($fruitCounts as $fruit => $count) {
+                    $wins[] = ['symbol' => $fruit, 'count' => $count];
+                }
+            }
         }
 
         // Retourner une réponse JSON avec les gains
-        return new Response(json_encode(['wins' => $touchingSymbols]), 200, ['Content-Type' => 'application/json']);
+        return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
     }
+
 
     private function calculateWins(array $symbols): array
     {
-        $touchingSymbols = []; // Tableau pour stocker les indices des symboles qui se touchent
+        $touchingSymbols = [];
 
         foreach ($symbols as $reel) {
-            $prevSymbol = null; // Stocke le symbole précédent dans la ligne
-            $consecutiveCount = 0; // Compte le nombre de symboles consécutifs identiques
+            $firstSymbol = reset($reel); // Stocke le premier symbole de la ligne
+            $prevSymbol = null;
+            $consecutiveCount = 0;
 
-            $touchingIndices = []; // Tableau pour stocker les indices des symboles qui se touchent dans cette ligne
+            $touchingIndices = [];
 
             foreach ($reel as $index => $symbol) {
-                if ($prevSymbol !== null && $symbol === $prevSymbol) {
-                    // Si le symbole actuel est identique au précédent, incrémente le compteur de symboles consécutifs
+                if ($prevSymbol !== null && $symbol === $prevSymbol && $symbol === $firstSymbol) {
+                    // Si le symbole actuel est identique au précédent et au premier symbole, incrémente le compteur de symboles consécutifs
                     $consecutiveCount++;
 
                     // Si deux symboles identiques sont côte à côte, ajoute leurs indices au tableau
-                    if ($consecutiveCount === 2) {
-                        $touchingIndices[] = $index - 1; // Index du premier symbole touché
-                        $touchingIndices[] = $index; // Index du deuxième symbole touché
+                    if ($consecutiveCount > 1) {
+                        if($consecutiveCount === 2){
+                            $touchingIndices[] = $index - 1; // Index du premier symbole touché
+                            $touchingIndices[] = $index; // Index du deuxième symbole touché
+                        }
+                        else{
+                            $touchingIndices[] = $index; // Index du deuxième symbole touché
+                        }
                     }
                 } else {
                     // Réinitialise le compteur si le symbole actuel est différent du précédent
