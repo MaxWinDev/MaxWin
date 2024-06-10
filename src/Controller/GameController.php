@@ -24,7 +24,7 @@ class GameController extends AbstractController
 
     #[Route('/', name: 'game', methods: ['GET'])]
     public function viewGame() {
-        return $this->render('game/index.html.twig');
+        return $this->render('game/game.html.twig');
     }
 
     // #[Route('/spin', name: 'game_spin', methods: ['GET', 'POST'])]
