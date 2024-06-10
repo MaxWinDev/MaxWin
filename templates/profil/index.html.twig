@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	<link href="{{ asset('styles/profil.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('styles/bootstrap.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('styles/bootstrap.bundle.min.js') }}"></script>
+{% endblock %}
+
+
+{% block body %}
+	<div
+		class="page">
+		{# Nav bar #}
+		<section class="container-fluid p-5"></section>
+
+		{% for win in userWins %}
+                    <li>
+                        <strong>Bet :</strong> {{ win.bet }}, 
+                        <strong>Amount :</strong> {{ win.amount }}, 
+                        <strong>Machine :</strong> {{ win.machineName }}
+                    </li>
+        {% endfor %}
+		
+		<section>
+			<div class="container text-white mt-5">
+				<h1>
+					Bienvenue,
+					<span class="fw-semibold fst-italic">
+						{{ user.username }}
+					</span>
+				</h1>
+				<div class="row gx-4 mt-3">
+					<div class="col-5">
+						<div class="p-O text-center">
+							<img class="w-100" src="{{ asset('image/homme-casino.jpeg') }}">
+							<div
+								class="fs-5 mt-3">{# Que puisse Faire pour vous, 
+									                            <br> gentleman, ladie ? #}
+							</div>
+						</div>
+					</div>
+					<div class="col-7">
+						<div class="py-2 filtre-noir">
+							<div class="row gx-0">
+								<div class="col-12">
+									<div class="pb-3 ps-3">
+										<span class="fs-3">Portefeuille</span>
+									</div>
+								</div>
+								<div class="col-4 text-center border-1">
+									{{ user.currency }}€
+									<br>
+									Argent disponible
+								</div>
+								<div class="col-4 text-center border-1">
+									0€
+									<br>
+									Bonus disponible
+								</div>
+								<div class="col-4 text-center border-1">
+									0€
+									<br>
+									Total
+								</div>
+								<div class="col-12">
+									<div class="px-3 mt-4">
+									<span class="fs-3">My wins history</span>
+										<table class="table mt-3">
+											<thead>
+												<tr>
+													<th scope="col">Date</th>
+													<th scope="col">Bet</th>
+													<th scope="col">Win</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th>01/01/2024</th>
+													<td>En cours</td>
+													<td>50,00€</td>
+												</tr>
+											</tbody>
+										</table>
+										<span class="fs-3">Transaction</span>
+										<table class="table mt-3">
+											<thead>
+												<tr>
+													<th scope="col">Date</th>
+													<th scope="col">Status</th>
+													<th scope="col">Montant déclaré</th>
+													<th scope="col">Montant reçu</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th>01/01/2024</th>
+													<td>En cours</td>
+													<td>50,00€</td>
+													<td>50,00€</td>
+												</tr>
+											</tbody>
+										</table>
+										
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="p-3">
+										<span class="fs-3">Compte</span>
+									</div>
+								</div>
+                                <div class="col-3 ps-3">
+                                    Pseudo
+                                </div>
+                                <div class="col-9">
+                                    {{ user.username }}
+                                </div>
+                                <div class="col-3 ps-3">
+                                    Adresse mail
+                                </div>
+                                <div class="col-9">
+                                    {{ user.email }} 
+                                </div>
+							</div>
+						</div>
+                        <div class="text-center mt-4 fs-4">
+                            <a class="text-white" href="/">Se déconnecter</a>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+
+	</div>
+{% endblock %}
