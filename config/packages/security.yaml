@@ -9,14 +9,6 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
-<<<<<<< HEAD
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|symbols|js)/
-            security: false
-        main:
-            lazy: true
-            provider: users_in_memory
-=======
         app:
             provider: user
             form_login:
@@ -32,7 +24,6 @@ security:
                 always_remember_me: false
             custom_authenticator: App\Security\UsersAuthenticator
             entry_point: form_login
->>>>>>> origin/main
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
