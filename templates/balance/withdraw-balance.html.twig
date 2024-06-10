@@ -20,6 +20,10 @@
                 </div>
                 <button type="submit">Retirer le solde</button>
             {{ form_end(form) }}
+
+                {% if error %}
+                    <p class="error-message" srtyle="color: red;">{{ error }}</p>
+                {% endif %}
         </div>
     </div>
 {% endblock %}
