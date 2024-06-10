@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/add-balance.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+    <div class="main-div">
+        <div class="center-div">
+            {{ form_start(form) }}
+                {{ form_row(form.amount) }}
+                <div class="form-group">
+                    <label for="currency">Devise</label>
+                    <select id="currency" name="currency" class="currency-input">
+                        <option value="EUR">EUR</option>
+                        <option value="USD">USD</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+                <button type="submit">Retirer le solde</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
