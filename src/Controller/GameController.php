@@ -64,7 +64,6 @@ class GameController extends AbstractController
             }
         }
 
-        var_dump($wins);
         if (count($wins) !== 0) {
             // Envoyer les gains via une requête POST avec HttpClient, si une win est détéctée
             $this->client->request('POST', 'http://127.0.0.1:8000/game/send_wins', [
