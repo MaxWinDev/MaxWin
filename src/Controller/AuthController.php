@@ -127,4 +127,14 @@ class AuthController extends AbstractController
 
         return $this->redirectToRoute('app_profil');
     }
+
+    #[Route('/check', name: 'app_auth_check')]
+    public function check(): Response
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->json(['status' => 'authenticated']);
+        }
+
+        return $this->json(['status' => 'unauthenticated']);
+    }
 }
