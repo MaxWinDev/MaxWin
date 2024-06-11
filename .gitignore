@@ -54,6 +54,7 @@
 #Environnement variables
 .env
 
+.idea/
 .idea/*
 
 ###> lexik/jwt-authentication-bundle ###

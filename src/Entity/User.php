@@ -19,8 +19,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'id_utilisateur', type: 'bigint')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'currency', type: 'decimal', precision: 10, scale: 2, nullable: false, options: ['default' => 0])]
-    private ?string $currency = null;
+    #[ORM\Column(name: 'balance', type: 'decimal', precision: 10, scale: 2, nullable: false, options: ['default' => 0])]
+    private ?int $balance = 0;
 
     #[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]
     private ?string $username = null;
@@ -47,14 +47,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getCurrency(): ?string
+    public function getBalance(): ?int
     {
-        return $this->currency;
+        return $this->balance;
     }
 
-    public function setCurrency(string $currency): self
+    public function setBalance(int $balance): self
     {
-        $this->currency = $currency;
+        $this->balance = $balance;
 
         return $this;
     }
