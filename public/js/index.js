@@ -301,7 +301,7 @@ class Slot {
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ symbols: symbols })
+          body: JSON.stringify({ symbols: symbols }),
       })
           .then(response => {
               console.log('Réponse reçue:', response);
@@ -313,7 +313,7 @@ class Slot {
           .catch((error) => {
               console.error('Erreur:', error);
           });
-  }
+     }
 
   
 

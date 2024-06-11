@@ -19,6 +19,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Controller\localStorage;
 
 #[Route('/auth')]
 class AuthController extends AbstractController
@@ -82,6 +83,8 @@ class AuthController extends AbstractController
 
             // On génère le token JWT pour la vérification de l'adresse emails avec le jwt lexik bundle
             $token = $this->jwtManager->createFromPayload($user, ['action' => 'confirm_email']);
+
+            localStorage.setItem('authToken', $token);
 
             // On envoie un emails de confirmation à l'utilisateur
             $this->mailerService->sendEmail(

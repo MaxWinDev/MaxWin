@@ -17,7 +17,8 @@ class GameController extends AbstractController
 
     public function __construct(
         private readonly Security $security,
-        private readonly HttpClientInterface $client
+        private readonly HttpClientInterface $client,
+        private readonly EntityManagerInterface $entityManager
     )
     {
     }
@@ -28,7 +29,7 @@ class GameController extends AbstractController
     }
 
     // #[Route('/spin', name: 'game_spin', methods: ['GET', 'POST'])]
-    public function updateBalance(Request $request, EntityManagerInterface $entityManager) {
+    public function updateBalance() {
 
         $user = $this->security->getUser();
         $userBalance = null;
@@ -70,58 +71,70 @@ class GameController extends AbstractController
         // return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/check_wins', name: 'check_wins', methods: ['GET'])]
+    #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
     public function checkWins(Request $request): Response
     {
-        // Lire le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
-        // Vérifiez que les données ont bien été reçues
         if (!isset($data['symbols'])) {
-            return new Response(json_encode(['error' => 'Invalid data']), 400, ['Content-Type' => 'application/json']);
+            return new Response(json_encode(['error' => 'Invalid data']), 400, ['Content-Type' => 'application/json'], 500);
         }
 
-        $symbols = $data['symbols'];
+        $this->updateBalance();
 
-        // Initialiser un tableau pour stocker les résultats des gains
-        $wins = [];
+        return new Response('', 200);
+        // Lire le contenu JSON de la requête
+        // $data = json_decode($request->getContent(), true);
+        // $this->updateBalance();
+        
+        // // Vérifiez que les données ont bien été reçues
+        // if (!isset($data['symbols'])) {
+        //     return new Response(json_encode(['error' => 'Invalid data']), 400, ['Content-Type' => 'application/json']);
+        //     }
+            
+        //     $symbols = $data['symbols'];
+            
+        //     // Initialiser un tableau pour stocker les résultats des gains
+        //     $wins = [];
+            
+        //     // Calculer les gains
+        //     $touchingSymbols = $this->calculateWins($symbols);
+            
+        //     return "romain";
+            
+        // foreach ($touchingSymbols as $lineIndex => $indices) {
+        //     if (reset($indices) === 0) {
+        //         $touchingFruits = [];
 
-        // Calculer les gains
-        $touchingSymbols = $this->calculateWins($symbols);
+        //         // Récupérer les fruits associés aux indices dans la ligne
+        //         foreach ($indices as $index) {
+        //             $touchingFruits[] = $symbols[$lineIndex][$index];
+        //         }
 
-        foreach ($touchingSymbols as $lineIndex => $indices) {
-            if (reset($indices) === 0) {
-                $touchingFruits = [];
+        //         // Compter le nombre d'occurrences de chaque couple de fruits
+        //         $fruitCounts = array_count_values($touchingFruits);
 
-                // Récupérer les fruits associés aux indices dans la ligne
-                foreach ($indices as $index) {
-                    $touchingFruits[] = $symbols[$lineIndex][$index];
-                }
+        //         // Stocker les couples fruits/nombre dans le tableau des gains
+        //         foreach ($fruitCounts as $fruit => $count) {
+        //             $wins[] = ['symbol' => $fruit, 'count' => $count];
+        //         }
+        //     }
+        // }
 
-                // Compter le nombre d'occurrences de chaque couple de fruits
-                $fruitCounts = array_count_values($touchingFruits);
-
-                // Stocker les couples fruits/nombre dans le tableau des gains
-                foreach ($fruitCounts as $fruit => $count) {
-                    $wins[] = ['symbol' => $fruit, 'count' => $count];
-                }
-            }
-        }
-
-        if (count($wins) !== 0) {
-            // Envoyer les gains via une requête POST avec HttpClient, si une win est détéctée
-            $this->client->request('POST', 'http://127.0.0.1:8000/game/send_wins', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-                'body' => json_encode(['wins' => $wins]),
-            ]);
-            // Retourner une réponse JSON avec les gains
-            //return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
-        } else {
-            // Si aucun gain n'a été obtenu, retournez une réponse vide
-            return new Response('', 200);
-        }
+        // if (count($wins) !== 0) {
+        //     // Envoyer les gains via une requête POST avec HttpClient, si une win est détéctée
+        //     // $this->client->request('POST', 'http://127.0.0.1:8000/game/send_wins', [
+        //     //     'headers' => [
+        //     //         'Content-Type' => 'application/json',
+        //     //     ],
+        //     //     'body' => json_encode(['wins' => $wins]),
+        //     // ]);
+        //     // Retourner une réponse JSON avec les gains
+        //     //return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
+        // } else {
+        //     // Si aucun gain n'a été obtenu, retournez une réponse vide
+        //     return new Response('', 200);
+        // }
     }
 
     private function calculateWins(array $symbols): array
