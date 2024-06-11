@@ -1,12 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block title %}Home{% endblock %}
 
+{% block header %}
+    {% include 'header.twig.html' %}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('css/home.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
+    {% include 'header.html.twig' with {'user': user} %}
     <div class="background-image">
         <div>
             <div class="container">

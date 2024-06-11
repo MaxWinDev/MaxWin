@@ -11,6 +11,7 @@
 
 
 {% block body %}
+	{% include 'header.html.twig' with {'user': user} %}
 	<div
 		class="page">
 		{# Nav bar #}
@@ -51,7 +52,7 @@
 									</div>
 								</div>
 								<div class="col-4 text-center border-1">
-									{{ user.currency }}€
+									{{ user.balance }}€
 									<br>
 									Argent disponible
 								</div>
