@@ -113,7 +113,7 @@
                                     {{ user.email }} 
                                 </div>
 								<div class="d-flex gap-3 justify-content-around my-2">
-									<a class="text-danger" href="/">Supprimer son compte</a>
+									<a class="text-danger" href="{{ path('app_delete_account') }}">Supprimer son compte</a>
 									<a class="text-white" href="{{ path('app_logout') }}">Se déconnecter</a>
 								</div>
 							</div>

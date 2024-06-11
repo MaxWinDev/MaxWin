@@ -131,6 +131,8 @@
       <path value="$PROJECT_DIR$/vendor/shieldon/messenger" />
       <path value="$PROJECT_DIR$/vendor/shieldon/event-dispatcher" />
       <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
