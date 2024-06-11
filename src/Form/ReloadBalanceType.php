@@ -17,6 +17,18 @@ class ReloadBalanceType extends AbstractType
                 'label' => 'Montant'
             ]);
 
+        if ($options['action'] === 'deposit') {
+            $builder
+                ->add('currency', ChoiceType::class, [
+                    'choices' => [
+                        'EUR' => 'EUR',
+                        'USD' => 'USD',
+                        'GBP' => 'GBP',
+                    ],
+                    'label' => 'Devise'
+                ]);
+        }
+
         if ($options['action'] === 'withdraw') {
             $builder
                 ->add('currency', ChoiceType::class, [
