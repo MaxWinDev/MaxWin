@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\ReloadBalanceType;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/balance')]
 class BalanceController extends AbstractController
@@ -20,8 +22,8 @@ class BalanceController extends AbstractController
 
 
 
-    #[Route('/recharge')]
-    public function recharge(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/deposit')]
+    public function deposit(Request $request, EntityManagerInterface $entityManager): Response
     {
         $error = null;
 
@@ -52,5 +54,19 @@ class BalanceController extends AbstractController
             'error' => $error,
             'form' => $form->createView(),
         ]);
+    }
+
+
+    private function convertCurrency($amount, $currency)
+    {
+        switch ($currency) {
+            case 'USD':
+                return $amount * 1.1;
+            case 'GBP':
+                return $amount * 0.9;
+            case 'EUR':
+            default:
+                return $amount;
+        }
     }
 }

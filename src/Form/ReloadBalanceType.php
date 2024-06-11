@@ -15,8 +15,32 @@ class ReloadBalanceType extends AbstractType
         $builder
             ->add('amount', MoneyType::class, [
                 'currency' => 'EUR',
-                'label' => 'Montant à recharger'
+                'label' => 'Montant'
             ]);
+
+        if ($options['action'] === 'deposit') {
+            $builder
+                ->add('currency', ChoiceType::class, [
+                    'choices' => [
+                        'EUR' => 'EUR',
+                        'USD' => 'USD',
+                        'GBP' => 'GBP',
+                    ],
+                    'label' => 'Devise'
+                ]);
+        }
+
+        if ($options['action'] === 'withdraw') {
+            $builder
+                ->add('currency', ChoiceType::class, [
+                    'choices' => [
+                        'EUR' => 'EUR',
+                        'USD' => 'USD',
+                        'GBP' => 'GBP',
+                    ],
+                    'label' => 'Devise'
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
