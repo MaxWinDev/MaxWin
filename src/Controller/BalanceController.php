@@ -69,14 +69,16 @@ class BalanceController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             $amount = $form->get('amount')->getData();
+
+
+            $currency = $request->request->get('currency');
+            
+            $convertedAmount = $this->convertCurrency($amount, $currency);
     
-            if ($amount > $user->getBalance()) {
+            if ($convertedAmount > $user->getBalance()) {
                 $error = 'Vous n\'avez pas suffisamment de solde pour effectuer ce retrait.';
             }
             else{
-                $currency = $request->request->get('currency');
-    
-                $convertedAmount = $this->convertCurrency($amount, $currency);
         
                 $user->setBalance($user->getBalance() - $convertedAmount);
         
