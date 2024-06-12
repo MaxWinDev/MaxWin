@@ -14,19 +14,9 @@
 	{% include 'header.html.twig' with {'user': user} %}
 	<div
 		class="page">
-		{# Nav bar #}
-		<section class="container-fluid p-5"></section>
-
-		{% for win in userWins %}
-                    <li>
-                        <strong>Bet :</strong> {{ win.bet }}, 
-                        <strong>Amount :</strong> {{ win.amount }}, 
-                        <strong>Machine :</strong> {{ win.machineName }}
-                    </li>
-        {% endfor %}
 		
 		<section>
-			<div class="container text-white mt-5">
+			<div class="container text-white main-container">
 				<h1>
 					Bienvenue,
 					<span class="fw-semibold fst-italic">
@@ -38,8 +28,7 @@
 						<div class="p-O text-center">
 							<img class="w-100" src="{{ asset('image/homme-casino.jpeg') }}">
 							<div
-								class="fs-5 mt-3">{# Que puisse Faire pour vous, 
-									                            <br> gentleman, ladie ? #}
+								class="fs-5 mt-3">
 							</div>
 						</div>
 					</div>
@@ -124,17 +113,15 @@
                                 <div class="col-9">
                                     {{ user.email }} 
                                 </div>
+								<div class="d-flex gap-3 justify-content-around my-2">
+									<a class="text-danger" href="{{ path('app_delete_account') }}">Supprimer son compte</a>
+									<a class="text-white" href="{{ path('app_logout') }}">Se déconnecter</a>
+								</div>
 							</div>
 						</div>
-                        <div class="text-center mt-4 fs-4">
-                            <a class="text-white" href="/">Se déconnecter</a>
-                        </div>
 					</div>
 				</div>
 			</div>
 		</section>
-
-
-
 	</div>
 {% endblock %}

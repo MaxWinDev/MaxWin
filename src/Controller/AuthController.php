@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use PHPUnit\Util\Exception;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\UsersAuthenticator;
 use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTFailureException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -19,6 +19,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/auth')]
 class AuthController extends AbstractController
@@ -28,7 +30,10 @@ class AuthController extends AbstractController
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly JWTTokenManagerInterface    $jwtManager,
         private readonly MailerService               $mailerService,
-        private readonly EntityManagerInterface      $entityManager
+        private readonly EntityManagerInterface      $entityManager,
+        private readonly Security                    $security,
+        private readonly HttpClientInterface         $httpClient,
+        private readonly UrlGeneratorInterface       $urlGenerator
     )
     {
     }
@@ -49,9 +54,8 @@ class AuthController extends AbstractController
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): Response
+    public function logout(): void
     {
-        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/register', name: 'app_register')]
@@ -125,5 +129,35 @@ class AuthController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profil');
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @description Permet de supprimer un compte utilisateur en envoyant une requete sur un endpoint ApiPlatform
+     */
+    #[Route('/delete-account', name: 'app_delete_account')]
+    public function deleteAccount(): Response
+    {
+
+        $user = $this->security->getUser();
+        if($user instanceof User) {
+            try {
+                $this->httpClient->request(
+                    'DELETE',
+                    $this->urlGenerator->generate('api_users_delete_item', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                        ]
+                    ]
+                );
+            } catch (\Exception $e) {
+                throw new Exception(
+                    'Error during the delete account process',
+                    $e->getMessage()
+                );
+            }
+        }
+        return $this->redirectToRoute('app_home');
     }
 }
