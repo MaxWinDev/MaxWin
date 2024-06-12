@@ -295,13 +295,13 @@ class Slot {
     }
 
     sendResults(symbols) {
-      console.log('Envoi des résultats au serveur:', symbols);
       fetch('http://localhost:8000/game/check_wins', {
           method: 'POST',
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
           },
           body: JSON.stringify({ symbols: symbols }),
+          credentials: 'include',
       })
           .then(response => {
               console.log('Réponse reçue:', response);
@@ -310,9 +310,7 @@ class Slot {
           .then(data => {
               console.log('Succès:', data);
           })
-          .catch((error) => {
-              console.error('Erreur:', error);
-          });
+          .catch(() => {});
      }
 
   
@@ -345,10 +343,10 @@ class Slot {
     if (winsArray.length > 0) {
       console.log("Gains détectés :");
       winsArray.forEach((win) => {
-        console.log(`L'utilisateur a gagné avec le symbole ${win.symbol} sur la ligne ${win.row} !`);
+        //console.log(`L'utilisateur a gagné avec le symbole ${win.symbol} sur la ligne ${win.row} !`);
       });
     } else {
-      console.log("Aucun gain n'a été détecté.");
+      //console.log("Aucun gain n'a été détecté.");
     }
 
     return winsArray.length > 0;

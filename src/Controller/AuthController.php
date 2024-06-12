@@ -17,9 +17,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Controller\localStorage;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/auth')]
 class AuthController extends AbstractController
@@ -29,7 +30,10 @@ class AuthController extends AbstractController
         private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly JWTTokenManagerInterface    $jwtManager,
         private readonly MailerService               $mailerService,
-        private readonly EntityManagerInterface      $entityManager
+        private readonly EntityManagerInterface      $entityManager,
+        private readonly Security                    $security,
+        private readonly HttpClientInterface         $httpClient,
+        private readonly UrlGeneratorInterface       $urlGenerator
     )
     {
     }
@@ -50,9 +54,8 @@ class AuthController extends AbstractController
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): Response
+    public function logout(): void
     {
-        return $this->redirectToRoute('app_home');
     }
 
     #[Route('/register', name: 'app_register')]
@@ -74,8 +77,7 @@ class AuthController extends AbstractController
                 )
             );
 
-            // init currency to 0
-            $user->setCurrency(0);
+            $user->setBalance(0);
 
             // save the user into
             $entityManager->persist($user);
@@ -83,8 +85,6 @@ class AuthController extends AbstractController
 
             // On génère le token JWT pour la vérification de l'adresse emails avec le jwt lexik bundle
             $token = $this->jwtManager->createFromPayload($user, ['action' => 'confirm_email']);
-
-            localStorage.setItem('authToken', $token);
 
             // On envoie un emails de confirmation à l'utilisateur
             $this->mailerService->sendEmail(
@@ -129,5 +129,35 @@ class AuthController extends AbstractController
         }
 
         return $this->redirectToRoute('app_profil');
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @description Permet de supprimer un compte utilisateur en envoyant une requete sur un endpoint ApiPlatform
+     */
+    #[Route('/delete-account', name: 'app_delete_account')]
+    public function deleteAccount(): Response
+    {
+
+        $user = $this->security->getUser();
+        if($user instanceof User) {
+            try {
+                $this->httpClient->request(
+                    'DELETE',
+                    $this->urlGenerator->generate('api_users_delete_item', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                        ]
+                    ]
+                );
+            } catch (\Exception $e) {
+                throw new Exception(
+                    'Error during the delete account process',
+                    $e->getMessage()
+                );
+            }
+        }
+        return $this->redirectToRoute('app_home');
     }
 }

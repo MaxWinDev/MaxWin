@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,9 @@ class GameController extends AbstractController
 
     #[Route('/', name: 'game', methods: ['GET'])]
     public function viewGame() {
-        return $this->render('game/game.html.twig');
+        $user = $this->security->getUser();
+
+        return $this->render('game/game.html.twig',['user' => $user]);
     }
 
     // #[Route('/spin', name: 'game_spin', methods: ['GET', 'POST'])]
@@ -33,8 +36,8 @@ class GameController extends AbstractController
 
         $user = $this->security->getUser();
         $userBalance = null;
-        
-        $userBalance = $user->getCurrency();
+
+        $userBalance = $user->getBalance();
 
         // Lire le contenu JSON de la requête
         //$data = json_decode($request->getContent(), true);
@@ -55,27 +58,32 @@ class GameController extends AbstractController
                 $multiplicateur = 10;
               break;
             default:
-                throw new CustomException("Fruit inconnu", 1);
+                throw new Exception("Fruit inconnu", 1);
         };
 
         $jackpot = $multiplicateur * ($nombre_fruit**$multiplicateur);
 
-        $user->setCurrency($userBalance + $jackpot);
+        $user->setBalance($userBalance + $jackpot);
 
         // Mettre à jour la balance de l'utilisateur
-        $entityManager->persist($user);  
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return new Response(json_encode(['balance' => $userBalance]), 200, ['Content-Type' => 'application/json']);
        
         // return $this->redirectToRoute('app_home');
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
     public function checkWins(Request $request): Response
     {
+        // Lire le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
+        // Vérifiez que les données ont bien été reçues
         if (!isset($data['symbols'])) {
             return new Response(json_encode(['error' => 'Invalid data']), 400, ['Content-Type' => 'application/json'], 500);
         }
