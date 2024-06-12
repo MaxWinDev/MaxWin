@@ -77,8 +77,7 @@ class AuthController extends AbstractController
                 )
             );
 
-            // init currency to 0
-            $user->setCurrency(0);
+            $user->setBalance(0);
 
             // save the user into
             $entityManager->persist($user);

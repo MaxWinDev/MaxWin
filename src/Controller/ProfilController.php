@@ -26,7 +26,7 @@ class ProfilController extends AbstractController
         }
 
 
-        return $this->render('profil/index.html.twig', [
+        return $this->render('profil/profil.html.twig', [
             'user' => $user,
             'userWins' => $userWins,
         ]);
