@@ -345,10 +345,10 @@ class Slot {
     if (winsArray.length > 0) {
       console.log("Gains détectés :");
       winsArray.forEach((win) => {
-        console.log(`L'utilisateur a gagné avec le symbole ${win.symbol} sur la ligne ${win.row} !`);
+        //console.log(`L'utilisateur a gagné avec le symbole ${win.symbol} sur la ligne ${win.row} !`);
       });
     } else {
-      console.log("Aucun gain n'a été détecté.");
+      //console.log("Aucun gain n'a été détecté.");
     }
 
     return winsArray.length > 0;
