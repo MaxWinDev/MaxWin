@@ -64,58 +64,62 @@
 {#    </div>#}
 {#{% endblock %}#}
 {% extends 'base.html.twig' %}
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/game.css') }}" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link
-            rel="stylesheet"
-            href="https://unpkg.com/bootstrap@5.2.3/dist/css/bootstrap-reboot.min.css"
-    />
+	{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/game.css') }}" type="text/css"> <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+	<link rel="stylesheet" href="https://unpkg.com/bootstrap@5.2.3/dist/css/bootstrap-reboot.min.css"/>
 {% endblock %}
 
 
 {% block title %}
-    Casino Game
+	Casino Game
 {% endblock %}
 
 {% block body %}
-    <div id="slot">
-{#        <div id="jackpot">Jackpot: <span id="jp">5.555.555</span></div>#}
-        <div style="display: flex; flex-direction: row">
-            <div id="reels">
-                <div class="reel"></div>
-                <div class="reel"></div>
-                <div class="reel"></div>
-                <div class="reel"></div>
-                <div class="reel"></div>
-            </div>
-            <div class="spin-container">
-                <button id="auto_spin_button" class="auto-spin-button">
-                    <span class="material-symbols-outlined">
-                        hdr_auto
-                    </span>
-                </button>
-                <button id="spin_button" class="spin-button">
-                    <span class="material-symbols-outlined">
-                        autorenew
-                    </span>
-                </button>
-                <button id="fast_spin_button" class="fast-spin-button">
-                    <span class="material-symbols-outlined">
-                        offline_bolt
-                    </span>
-                </button>
-            </div>
-        </div>
-{#        <div id="controls">#}
-{#            <label>#}
-{#                <input type="checkbox" name="autoplay" id="autoplay" />#}
-{#                Autoplay#}
-{#            </label>#}
-{#        </div>#}
-    </div>
+	<div
+		id="slot">
+		{#        <div id="jackpot">Jackpot: <span id="jp">5.555.555</span></div>#}
+		<div style="display: flex; flex-direction: row">
+			<div id="reels">
+				<div class="reel"></div>
+				<div class="reel"></div>
+				<div class="reel"></div>
+				<div class="reel"></div>
+				<div class="reel"></div>
+			</div>
+			<div class="spin-container">
+				<button id="auto_spin_button" class="auto-spin-button">
+					<span class="material-symbols-outlined">
+						hdr_auto
+					</span>
+				</button>
+				<button id="spin_button" class="spin-button">
+					<span class="material-symbols-outlined">
+						autorenew
+					</span>
+				</button>
+				<button id="fast_spin_button" class="fast-spin-button">
+					<span class="material-symbols-outlined">
+						offline_bolt
+					</span>
+				</button>
+			</div>
+		</div>
+		<div class="container_balance">
+
+			<div style="color: white; font-size: 25px; display: flex;">
+				Balance :
+				<div
+					id="test-get">{# {{ balance_user }}    #}
+				</div>
+			</div>
+			<div id="" style="color: white; font-size: 25px;">
+				Mise :
+				{#  {{ balance_user }} #}
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('js/index.js') }}"></script>
+	<script src="{{ asset('js/index.js') }}"></script>
 {% endblock %}
