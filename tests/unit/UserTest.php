@@ -33,6 +33,18 @@ class UserTest extends TestCase
         $user->addWin($win2);
         $this->assertEquals(2, count($user->getWins()));
     }
+
+    public function test_delete_wins(){
+        $win = new Win();
+        $win2 = new Win();
+        $user = new User();
+
+        $user->addWin($win);
+        $this->assertEquals(1, count($user->getWins()));
+
+        $user->removeWin($win);
+        $this->assertEquals(0, count($user->getWins()));
+    }
 }
 
 ?>
