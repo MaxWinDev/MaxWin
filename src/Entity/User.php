@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 #[Delete(
-//    security: 'is_granted("CAN_DELETE", object)',
+    security: 'is_granted("CAN_DELETE", object)',
     name: 'api_users_delete_item',
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
