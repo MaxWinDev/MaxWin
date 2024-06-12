@@ -23,12 +23,14 @@ class ProfilController extends AbstractController
 
         if ($user) {
             $userWins = $user->getWins();
+            $userTransactions = $user->getTransactions();
         }
 
 
         return $this->render('profil/profil.html.twig', [
             'user' => $user,
             'userWins' => $userWins,
+            'transactions' => $userTransactions
         ]);
     }
 }
