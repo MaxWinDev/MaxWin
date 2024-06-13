@@ -1,0 +1,25 @@
+{% block stylesheets %}
+    <link href="{{ asset('css/header.css') }}" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="navbar">
+        <div class="container-logo">
+            <a class="button_link" href="{{ path('app_home') }}">
+                <img class="logo-navbar" src="/assets/images/logo_maxwin.jfif">
+            </a>
+        </div>
+        <span class="title">Max Win</span>
+        <div class="balance-profil">
+            <p>Balance: {{ user.balance }}</p>
+            <a class="button_link" href="{{ path('app_profil') }}">
+                <button>
+                    Profile
+                    <i class="fa-solid fa-user"></i>
+                </button>
+            </a>
+        </div>
+    </div>
+{% endblock %}

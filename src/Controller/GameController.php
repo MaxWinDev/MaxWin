@@ -7,18 +7,23 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+
 
 #[Route('/game')]
 class GameController extends AbstractController
 {
     
     public function __construct(
-        private readonly HttpClientInterface $client
+        private readonly HttpClientInterface $client,
+        private readonly Security $security,
     ) {}
     
     #[Route('/', name: 'game', methods: ['GET'])]
     public function viewGame() {
-        return $this->render('game/game.html.twig');
+        $user = $this->security->getUser();
+
+        return $this->render('game/game.html.twig',['user' => $user]);
     }
 
     #[Route('/send_wins', name: 'send_wins', methods: ['POST'])]

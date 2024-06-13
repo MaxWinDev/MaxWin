@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\Delete;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+#[Delete(
+    security: 'is_granted("CAN_DELETE", object)',
+    name: 'api_users_delete_item',
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un compte est déjà lié à cette adresse email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -20,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(name: 'balance', type: 'decimal', precision: 10, scale: 2, nullable: false, options: ['default' => 0])]
-    private ?int $balance = 0;
+    private ?float $balance = 0;
 
     #[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]
     private ?string $username = null;
@@ -37,9 +42,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Win::class, orphanRemoval: true)]
     private Collection $wins;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transactions::class, orphanRemoval: true)]
+    private Collection $transactions;
+
     public function __construct()
     {
         $this->wins = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,12 +56,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getBalance(): ?int
+    public function getBalance(): ?float
     {
         return $this->balance;
     }
 
-    public function setBalance(int $balance): self
+    public function setBalance(float $balance): self
     {
         $this->balance = $balance;
 
@@ -140,9 +149,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeWin(Win $win): self
     {
         if ($this->wins->removeElement($win)) {
-            // set the owning side to null (unless already changed)
             if ($win->getUser() === $this) {
                 $win->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): self
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): self
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            if ($transaction->getUser() === $this) {
+                $transaction->setUser(null);
             }
         }
 
