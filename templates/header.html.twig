@@ -13,7 +13,7 @@
         </div>
         <span class="title">Max Win</span>
         <div class="balance-profil">
-            <p>Balance: {{ user.balance }}</p>
+            <p id="balance">Balance: {{ user.balance }}</p>
             <a class="button_link" href="{{ path('app_profil') }}">
                 <button>
                     Profile
@@ -22,4 +22,26 @@
             </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function fetchBalance() {
+                fetch('{{ path('get_balance') }}', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('balance').textContent = 'Balance: ' + data.balance;
+                    })
+                    .catch(error => console.error('Error fetching balance:', error));
+            }
+
+            // Fetch balance every 5 seconds
+            setInterval(fetchBalance, 5000);
+        });
+    </script>
 {% endblock %}
