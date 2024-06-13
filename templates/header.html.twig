@@ -11,7 +11,10 @@
                 <img class="logo-navbar" src="/assets/images/logo_maxwin.jfif">
             </a>
         </div>
-        <span class="title">Max Win</span>
+        <a class="button_link" href="{{ path('app_home') }}">
+            <span class="title">Max Win</span>
+        </a>
+
         <div class="balance-profil">
             <p>Balance: {{ user.balance }}</p>
             <a class="button_link" href="{{ path('app_profil') }}">
