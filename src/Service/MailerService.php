@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
 class MailerService
@@ -13,6 +14,15 @@ class MailerService
     {
     }
 
+    /**
+     * @param string $to
+     * @param string $subject
+     * @param string $template
+     * @param array $context
+     * @return void
+     * @throws TransportExceptionInterface
+     * @description Méthode d'envoi d'email en lui passant le destinataire, le sujet, le template et le contexte
+     */
     public function sendEmail(
         string $to,
         string $subject,

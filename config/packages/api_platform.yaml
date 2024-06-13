@@ -8,7 +8,7 @@ api_platform:
         jsonopenapi: ['application/vnd.openapi+json']
         html: ['text/html']
     defaults:
-        stateless: true
+        stateless: false
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
         extra_properties:
@@ -17,3 +17,8 @@ api_platform:
     keep_legacy_inflector: false
     use_symfony_listeners: true
     enable_swagger: true
+    mapping:
+        paths: [ '%kernel.project_dir%/src/Entity' ]
+    swagger:
+        versions: [ 3 ]
+

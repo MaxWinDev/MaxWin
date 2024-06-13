@@ -20,18 +20,32 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
+    /**
+     * @const string LOGIN_ROUTE la constante qui contient le nom de la route de connexion
+     */
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator
+    )
     {
     }
 
+    /**
+     * @param Request $request
+     * @return Passport
+     * @description Méthode d'authentification
+     */
     public function authenticate(Request $request): Passport
     {
+
+        // On récupère l'identifiant de l'utilisateur (email) dans le payload de la requête entrante
         $email = $request->getPayload()->getString('email');
 
+        // On stocke l'identifiant de l'utilisateur dans la session
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
+        // On retourne un objet Passport contenant les informations de connexion
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($request->getPayload()->getString('password')),
@@ -44,15 +58,20 @@ class UsersAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // On récupère l'URL de redirection
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
+        // Quand l'authentification réussit, on redirige l'utilisateur vers la page d'accueil
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
-//        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     * @description Méthode de redirection en cas d'échec de connexion
+     */
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

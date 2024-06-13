@@ -25,7 +25,6 @@ security:
                 always_remember_me: false
             custom_authenticator: App\Security\UsersAuthenticator
             entry_point: form_login
-            stateless: false
 
 
             # activate different ways to authenticate
