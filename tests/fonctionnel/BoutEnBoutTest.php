@@ -4,8 +4,8 @@ namespace App\Tests;
 
 use Symfony\Component\Panther\PantherTestCase;
 
-class BoutEnBoutTest extends PantherTestCase
-{
+// class BoutEnBoutTest extends PantherTestCase
+// {
     // public function testSomething(): void
     // {
     //     // $client = static::createPantherClient();
@@ -13,4 +13,4 @@ class BoutEnBoutTest extends PantherTestCase
 
     //     // $this->assertSelectorTextContains('h1', 'Hello World');
     // }
-}
+// }
