@@ -22,6 +22,9 @@ class Win
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $machineName = null;
 
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $date = null;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'wins')]
     #[ORM\JoinColumn(nullable: false, name: 'user_id', referencedColumnName: 'id_utilisateur', onDelete: 'CASCADE')]
     private ?User $user = null;
@@ -39,6 +42,18 @@ class Win
     public function setBet(string $bet): self
     {
         $this->bet = $bet;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
