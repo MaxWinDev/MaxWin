@@ -296,12 +296,12 @@ class Slot {
 
     sendResults(symbols) {
       fetch('http://localhost:8000/game/check_wins', {
+          credentials: 'include',
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({ symbols: symbols }),
-          credentials: 'include',
       })
           .then(response => {
               console.log('Réponse reçue:', response);
