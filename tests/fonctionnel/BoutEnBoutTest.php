@@ -8,9 +8,9 @@ use Symfony\Component\Panther\PantherTestCase;
 // {
     // public function testSomething(): void
     // {
-    //     // $client = static::createPantherClient();
-    //     // $crawler = $client->request('GET', '/');
+        // $client = static::createPantherClient();
+        // $crawler = $client->request('GET', '/');
 
-    //     // $this->assertSelectorTextContains('h1', 'Hello World');
+        // $this->assertSelectorTextContains('h1', 'Hello World');
     // }
 // }
