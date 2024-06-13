@@ -7,14 +7,35 @@ use Symfony\Component\HTTPFoundation\Response;
 
 class GameControllerTest extends WebTestCase
 {
-    public function testPageGame(): void
+    public function testAllPageWithoutConnexion(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/game/');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorTextContains('div', 'hdr_auto');
-        $this->assertSelectorTextContains('div', 'autorenew');
-        $this->assertSelectorTextContains('div', 'offline_bolt');
+        // Vérifier qu'il y a une redirection
+        $this->assertTrue($client->getResponse()->isRedirection());
+        $this->assertEquals('http://localhost/auth/login', $client->getResponse()->headers->get('Location'));
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        
+        $crawler = $client->request('GET', '/profil/');
+        $this->assertTrue($client->getResponse()->isRedirection());
+        $this->assertEquals('http://localhost/auth/login', $client->getResponse()->headers->get('Location'));
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        $crawler = $client->request('GET', '/balance/withdraw');
+        $this->assertTrue($client->getResponse()->isRedirection());
+        $this->assertEquals('http://localhost/auth/login', $client->getResponse()->headers->get('Location'));
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        
+        $crawler = $client->request('GET', '/home');
+        $this->assertTrue($client->getResponse()->isRedirection());
+        $this->assertEquals('http://localhost/auth/login', $client->getResponse()->headers->get('Location'));
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+
+        // $this->assertSelectorTextContains('div', 'hdr_auto');
+        // $this->assertSelectorTextContains('div', 'autorenew');
+        // $this->assertSelectorTextContains('div', 'offline_bolt');
     }
+
+    
 }

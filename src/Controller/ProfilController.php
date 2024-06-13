@@ -26,7 +26,6 @@ class ProfilController extends AbstractController
             $userTransactions = $user->getTransactions();
         }
 
-
         return $this->render('profil/profil.html.twig', [
             'user' => $user,
             'userWins' => $userWins,
