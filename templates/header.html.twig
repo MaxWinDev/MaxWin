@@ -16,7 +16,11 @@
         </a>
 
         <div class="balance-profil">
-            <p>Balance: {{ user.balance }}</p>
+            <p>
+             {% if user.balance is defined %}
+                Balance: {{ user.balance }}
+             {% endif %}
+             </p>
             <a class="button_link" href="{{ path('app_profil') }}">
                 <button>
                     Profile
