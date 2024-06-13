@@ -41,9 +41,11 @@ class GameController extends AbstractController
     #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
     public function checkWins(Request $request): Response
     {
+        // Décrémenter le solde de l'utilisateur de 1 pour chaque spin
         $user = $this->security->getUser();
         $user->setBalance($user->getBalance() - 1);
 
+        // Sauvegarder le nouvel état du solde de l'utilisateur en base de données
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 

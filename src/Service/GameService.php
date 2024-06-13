@@ -7,6 +7,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class GameService
 {
+    // Tableau des gains pour chaque symbole
     private array $symbolPayouts = [
         '7' => 50,
         'cerise' => 5,
@@ -68,13 +69,16 @@ class GameService
     {
         $totalPayout = 0;
 
+        // Calcule le montant total des gains
         foreach ($wins as $win) {
             $totalPayout += $this->symbolPayouts[$win['symbol']] * $win['count'] * $bet;
         }
 
+        // Met à jour le solde de l'utilisateur
         $user = $this->security->getUser();
         $user->setBalance($user->getBalance() + $totalPayout);
 
+        // Sauvegarde le nouvel état du solde de l'utilisateur en base de données
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
