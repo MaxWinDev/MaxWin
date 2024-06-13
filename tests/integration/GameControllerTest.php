@@ -27,14 +27,14 @@ class GameControllerTest extends WebTestCase
         $this->assertEquals('/home/', $this->client->getRequest()->getPathInfo());
 
         // rouver le lien et cliquer dessus
-        $link = $crawler->selectLink('Profile')->link();
-        // $crawler = $this->client->click($link);
+        $link = $crawler->selectLink('Click to play')->link();
+        $crawler = $this->client->click($link);
 
         // Vérifier qu'il y a bien une redirection
-        // $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Vérifier si on est sur la bonne page 
-        // $this->assertEquals('/game', $this->client->getRequest()->getPathInfo()); 
+        $this->assertEquals('/game/', $this->client->getRequest()->getPathInfo()); 
     }
 
 }

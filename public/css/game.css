@@ -215,6 +215,17 @@ input[type="checkbox"] {
     transform: scaleY(-1);
 }
 
+.container_balance{
+    display: flex;
+    width: 30%;
+    justify-content: space-between;
+    color: white;
+    font-size: 25px;
+}
 
+.balance{
+    color: red;
+    font-size: 20px;
+}
 
 

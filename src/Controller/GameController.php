@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,27 +14,50 @@ use Symfony\Bundle\SecurityBundle\Security;
 #[Route('/game')]
 class GameController extends AbstractController
 {
-    
-    public function __construct(
-        private readonly HttpClientInterface $client,
-        private readonly Security $security,
-    ) {}
-    
-    #[Route('/', name: 'game', methods: ['GET'])]
-    public function viewGame() {
-        $user = $this->security->getUser();
 
-        return $this->render('game/game.html.twig',['user' => $user]);
+    var array $symbolPayouts = [
+        '7' => 50,
+        'cerise' => 5,
+        'citron' => 5,
+        'fraise' => 5,
+        'gold' => 25,
+        'max' => 100,
+        'pasteque' => 5,
+        'prune' => 5,
+    ];
+
+    public function __construct(
+        private readonly HttpClientInterface    $client,
+        private readonly Security               $security,
+        private readonly EntityManagerInterface $entityManager
+    )
+    {
     }
 
-    #[Route('/send_wins', name: 'send_wins', methods: ['POST'])]
-    public function get_wins(Request $request) : Response {
-        return $this->redirectToRoute('app_home');
+    #[Route('/', name: 'game', methods: ['GET'])]
+    public function viewGame()
+    {
+        $user = $this->security->getUser();
+
+        $response = $this->render('game/game.html.twig', [
+            'user' => $user
+        ]);
+
+        // Desactivate cache
+        $response->setSharedMaxAge(0);
+        $response->headers->addCacheControlDirective('no-store', true);
+        return $response;
     }
 
     #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
     public function checkWins(Request $request): Response
     {
+        $user = $this->security->getUser();
+        $user->setBalance($user->getBalance() - 1);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
         // Lire le contenu JSON de la requête
         $data = json_decode($request->getContent(), true);
 
@@ -70,19 +94,9 @@ class GameController extends AbstractController
         }
 
         if (count($wins) !== 0) {
-            // Envoyer les gains via une requête POST avec HttpClient, si une win est détéctée
-            $this->client->request('POST', 'http://127.0.0.1:8000/game/send_wins', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-                'body' => json_encode(['wins' => $wins]),
-            ]);
-            // Retourner une réponse JSON avec les gains
-            //return new Response(json_encode(['wins' => $wins]), 200, ['Content-Type' => 'application/json']);
-        } else {
-            // Si aucun gain n'a été obtenu, retournez une réponse vide
-            return new Response('', 200);
+            $this->calculatePayout($wins, 1);
         }
+        return new Response('', 200);
     }
 
 
@@ -104,11 +118,10 @@ class GameController extends AbstractController
 
                     // Si deux symboles identiques sont côte à côte, ajoute leurs indices au tableau
                     if ($consecutiveCount > 1) {
-                        if($consecutiveCount === 2){
+                        if ($consecutiveCount === 2) {
                             $touchingIndices[] = $index - 1; // Index du premier symbole touché
                             $touchingIndices[] = $index; // Index du deuxième symbole touché
-                        }
-                        else{
+                        } else {
                             $touchingIndices[] = $index; // Index du deuxième symbole touché
                         }
                     }
@@ -125,5 +138,20 @@ class GameController extends AbstractController
         }
 
         return $touchingSymbols;
+    }
+
+    function calculatePayout($wins, $bet)
+    {
+        $totalPayout = 0;
+
+        foreach ($wins as $win) {
+            $totalPayout += $this->symbolPayouts[$win['symbol']] * $win['count'] * $bet;
+        }
+
+        $user = $this->security->getUser();
+        $user->setBalance($user->getBalance() + $totalPayout);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 }
