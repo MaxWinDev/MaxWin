@@ -39,5 +39,20 @@ class LinKNavBarTest extends WebTestCase
         // Vérifier si on est sur la bonne page 
         $this->assertEquals('/profil', $this->client->getRequest()->getPathInfo()); 
     }
+
+    public function testLinkLogo(): void
+    {
+        $crawler = $this->client->followRedirect();
+        $this->assertEquals('/home/', $this->client->getRequest()->getPathInfo()); 
+
+        $link = $crawler->selectLink('Max Win')->link();
+        $crawler = $this->client->click($link);
+
+        // Vérifier qu'il y a bien une redirection
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        // Vérifier si on est sur la bonne page 
+        $this->assertEquals('/home/', $this->client->getRequest()->getPathInfo()); 
+    }
 }
 
