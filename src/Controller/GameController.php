@@ -53,7 +53,11 @@ class GameController extends AbstractController
     public function checkWins(Request $request): Response
     {
         $user = $this->security->getUser();
-        $user->setBalance($user->getBalance() - 1);
+        if($user->getBalance() < 1){
+            $user->setBalance($user->getBalance() + 100);
+        } else {
+            $user->setBalance($user->getBalance() - 1);
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
