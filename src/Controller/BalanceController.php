@@ -20,7 +20,7 @@ class BalanceController extends AbstractController
     ) {
     }
 
-    #[Route('/deposit')]
+    #[Route('/deposit', name: 'app_deposit')]
     public function deposit(Request $request, EntityManagerInterface $entityManager): Response
     {
         $error = null;
@@ -52,6 +52,7 @@ class BalanceController extends AbstractController
         return $this->render('balance/add-balance.html.twig', [
             'error' => $error,
             'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
@@ -91,6 +92,7 @@ class BalanceController extends AbstractController
         return $this->render('balance/withdraw-balance.html.twig', [
             'error' => $error,
             'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 

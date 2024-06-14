@@ -38,36 +38,62 @@ class AuthController extends AbstractController
     {
     }
 
+    /**
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     * @description Route de connexion
+     */
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // Si l'utilisateur est déjà connecté, on le redirige vers la page d'accueil
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 
-        // get the login error if there is one
+        // On récupère les erreurs de connexion
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
+
+        // On récupère le dernier nom d'utilisateur saisi
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // On redirige vers la page de connexion
         return $this->render('auth/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
+    /**
+     * @return void
+     * @description Route de déconnexion (appelé depuis le bouton "se deconnecter" dans la section profile)
+     */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
     }
 
+    /**
+     * @param Request $request
+     * @param Security $security
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, Security $security, EntityManagerInterface $entityManager): Response
     {
+        // Si l'utilisateur est déjà connecté, on le redirige vers la page d'accueil
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
+
+        // On crée un nouvel utilisateur
         $user = new User();
+
+        // On crée le formulaire d'inscription
         $form = $this->createForm(RegistrationFormType::class, $user);
+
+        // On traite la requête
         $form->handleRequest($request);
 
+        // Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -77,9 +103,10 @@ class AuthController extends AbstractController
                 )
             );
 
+            // Initialisation du solde à 0
             $user->setBalance(0);
 
-            // save the user into
+            // sauvegarde des modifications
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -97,11 +124,11 @@ class AuthController extends AbstractController
                 ]
             );
 
-            // do anything else you need here, like send an emails
-
+            // On login l'utilisateur dans le contexte symfony
             return $security->login($user, UsersAuthenticator::class, 'app');
         }
 
+        // On redirige vers la page d'inscription
         return $this->render('auth/register.html.twig', [
             'registrationForm' => $form,
         ]);
@@ -109,6 +136,7 @@ class AuthController extends AbstractController
 
     /**
      * @throws JWTFailureException
+     * @param TokenInterface $token c'est le token généré lors de l'inscription provenant de l'email de confirmation que l'utilisateur a reçu sur sa boite mail (docker-compose avec mailpit)
      */
     #[Route('/verify/{token}', name: 'app_verify_email')]
     public function verifyUserEmail(TokenInterface $token): Response
@@ -122,12 +150,14 @@ class AuthController extends AbstractController
                 $this->entityManager->flush();
             }
         } catch (\Exception $e) {
+            // Si il y a une Exception, on renvoie une erreur
             throw new JWTFailureException(
                 'Error during the email verify process',
                 $e->getMessage()
             );
         }
 
+        // On redirige vers la page profile
         return $this->redirectToRoute('app_profil');
     }
 
@@ -139,8 +169,10 @@ class AuthController extends AbstractController
     public function deleteAccount(): Response
     {
 
+        // On récupère l'utilisateur connecté dans le contexte symfony
         $user = $this->security->getUser();
         if($user instanceof User) {
+            // On envoie une requete DELETE sur l'endpoint ApiPlatform pour supprimer le compte utilisateur
             try {
                 $this->httpClient->request(
                     'DELETE',
@@ -152,12 +184,15 @@ class AuthController extends AbstractController
                     ]
                 );
             } catch (\Exception $e) {
+                // Si il y a une Exception, on renvoie une erreur
                 throw new Exception(
                     'Error during the delete account process',
                     $e->getMessage()
                 );
             }
         }
+
+        // On redirige vers la page d'accueil
         return $this->redirectToRoute('app_home');
     }
 }

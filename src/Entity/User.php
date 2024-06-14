@@ -2,53 +2,95 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
+use App\Controller\DeleteUsersController;
+use App\Dto\UsersStatisticsDto;
+use App\Repository\UserRepository;
+use App\State\UsersStatisticsProvider;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Repository\UserRepository;
-use ApiPlatform\Metadata\Delete;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write']],
+)]
 #[Delete(
-    security: 'is_granted("CAN_DELETE", object)',
+    description: 'Suppression d\'un compte utilisateur pour un id données',
+    security: 'is_granted("ROLE_USER") and is_granted("CAN_DELETE", object)',
     name: 'api_users_delete_item',
+)]
+#[Patch(
+    uriTemplate: '/admin/users/{id}',
+    description: 'Modifier les informations d\'un utilisateur pour un id donné',
+)]
+#[Get(
+    uriTemplate: '/admin/users/{id}',
+    description: 'Obtenir les informations d\'un utilisateur pour un id données',
+)]
+#[GetCollection(
+    uriTemplate: '/admin/users',
+    description: 'Obtenir la liste de tous les utilisateurs de l\'application',
+)]
+#[Put(
+    uriTemplate: '/admin/users/{id}',
+    description: 'Remplacer l\'intégralitée des informations d\'un utilisateur pour un id donné',
+)]
+#[Delete(
+    uriTemplate: '/admin/users',
+    controller: DeleteUsersController::class,
+    description: 'Suppression de l\'intégralitée des utilisateurs de l\'application',
+)]
+#[Get(
+    uriTemplate: '/admin/users-stats',
+    description: 'Obtenir les statistiques des utilisateurs de l\'application',
+    output: UsersStatisticsDto::class,
+    provider: UsersStatisticsProvider::class,
 )]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Un compte est déjà lié à cette adresse email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[Groups(['user:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_utilisateur', type: 'bigint')]
     private ?int $id = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(name: 'balance', type: 'decimal', precision: 10, scale: 2, nullable: false, options: ['default' => 0])]
-    private ?float $balance = 0;
+    private ?int $balance = 0;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(name: 'username', type: 'string', length: 255, nullable: false)]
     private ?string $username = null;
 
     #[ORM\Column(name: 'password', type: 'string', length: 255, nullable: false)]
     private ?string $password = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(name: 'email', type: 'string', length: 255)]
     private ?string $email = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Win::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Win::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $wins;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Transactions::class, orphanRemoval: true)]
-    private Collection $transactions;
 
     public function __construct()
     {
         $this->wins = new ArrayCollection();
-        $this->transactions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -149,6 +191,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeWin(Win $win): self
     {
         if ($this->wins->removeElement($win)) {
+            // set the owning side to null (unless already changed)
             if ($win->getUser() === $this) {
                 $win->setUser(null);
             }
