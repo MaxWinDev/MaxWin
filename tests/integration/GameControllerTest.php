@@ -17,8 +17,8 @@ class GameControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/auth/login');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $form = $crawler->selectButton('Se connecter')->form();
-        $form['email'] = 'romain.fillot@gmail.com';
-        $form['password'] = 'guerre007';
+        $form['email'] = 'alexis.carreau16@gmail.com';
+        $form['password'] = 'password';
         $this->client->submit($form);
     }
 

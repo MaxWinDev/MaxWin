@@ -7,7 +7,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class GameService
 {
-    // Tableau des gains pour chaque symbole
+    // Tableau des multiplicateurs de gains pour chaque symbole
     private array $symbolPayouts = [
         '7' => 25,
         'cerise' => 2,
@@ -25,6 +25,11 @@ class GameService
     ) {
     }
 
+    /**
+     * @return Array
+     * @param array $symbols
+     * @description Cacul les symboles gagnant (2 identique au minimum qui se touchent depuis la gauche)
+     */
     public function calculateWins(array $symbols): array
     {
         $touchingSymbols = [];
@@ -65,6 +70,10 @@ class GameService
         return $touchingSymbols;
     }
 
+    /**
+     * @return void
+     * @description Ajoute à la balance de l'utilisateur ses différents gains
+     */
     public function calculatePayout(array $wins, int $bet): void
     {
         $totalPayout = 0;

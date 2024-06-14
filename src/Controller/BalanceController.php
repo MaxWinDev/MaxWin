@@ -20,6 +20,10 @@ class BalanceController extends AbstractController
     ) {
     }
 
+    /**
+     * @return Response
+     * @description Route pour deposer de l'argent sur le compte de l'utilisateur
+     */
     #[Route('/deposit', name: 'app_deposit')]
     public function deposit(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -28,13 +32,16 @@ class BalanceController extends AbstractController
         $form = $this->createForm(ReloadBalanceType::class);
         $form->handleRequest($request);
 
+        // On vérifie que le formulaire à été soumis & est valide
         if ($form->isSubmitted() && $form->isValid()) {
+            // On récupère les données du formulaire
             $amount = $form->get('amount')->getData();
             $currency = $request->request->get('currency');
-            $convertedAmount = $this->convertCurrency($amount, $currency);
+            $convertedAmount = $this->convertCurrency($amount, $currency); // On convertis le montant en EUR
 
-            $user->setBalance($user->getBalance() + $convertedAmount);
+            $user->setBalance($user->getBalance() + $convertedAmount); // On incrémente la balance
 
+            // On créer une nouvelle transaction pour pouvoir traçer le dépôt
             $transaction = new Transactions();
             $transaction->setUser($user);
             $transaction->setType('deposit');
@@ -42,6 +49,7 @@ class BalanceController extends AbstractController
             $transaction->setCurrency($currency);
             $transaction->setDate(new \DateTime());
 
+            // On sauvegarde en base de données
             $entityManager->persist($user);
             $entityManager->persist($transaction);
             $entityManager->flush();
@@ -56,6 +64,10 @@ class BalanceController extends AbstractController
         ]);
     }
 
+    /**
+     * @return Response
+     * @description Route pour retirer de l'argent du compte de l'utilisateur
+     */
     #[Route('/withdraw', name: 'app_withdraw')]
     public function withdraw(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -64,16 +76,19 @@ class BalanceController extends AbstractController
         $form = $this->createForm(ReloadBalanceType::class);
         $form->handleRequest($request);
 
+        // On vérifie que le formulaire à été soumis & est valide
         if ($form->isSubmitted() && $form->isValid()) {
             $amount = $form->get('amount')->getData();
             $currency = $request->request->get('currency');
-            $convertedAmount = $this->convertCurrency($amount, $currency);
+            $convertedAmount = $this->convertCurrency($amount, $currency);  // On convertis le montant en EUR
 
+            // On vérifie si l'utilisateur a suffisemment d'argent sur son compte pour le retirer
             if ($convertedAmount > $user->getBalance()) {
                 $error = 'Vous n\'avez pas suffisamment de solde pour effectuer ce retrait.';
             } else {
-                $user->setBalance($user->getBalance() - $convertedAmount);
+                $user->setBalance($user->getBalance() - $convertedAmount); // On enlève le montant qu'il souhaite retirer
 
+                // On créer une nouvelle transaction pour pouvoir traçer le retrait
                 $transaction = new Transactions();
                 $transaction->setUser($user);
                 $transaction->setType('withdrawal');
@@ -81,6 +96,7 @@ class BalanceController extends AbstractController
                 $transaction->setCurrency($currency);
                 $transaction->setDate(new \DateTime());
 
+                // On sauvegarde en base de données
                 $entityManager->persist($user);
                 $entityManager->persist($transaction);
                 $entityManager->flush();
@@ -96,6 +112,10 @@ class BalanceController extends AbstractController
         ]);
     }
 
+    /**
+     * @return number
+     * @description Converti la somme en fonction de la devise choisie
+     */
     private function convertCurrency($amount, $currency)
     {
         switch ($currency) {
