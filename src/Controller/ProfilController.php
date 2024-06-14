@@ -22,8 +22,8 @@ class ProfilController extends AbstractController
         $userWins = null;
 
         if ($user) {
-            $userWins = $user->getWins();
-            $userTransactions = $user->getTransactions();
+            $userWins = $user->getWins(); // Récupérer les gains de l'utilisateur
+            $userTransactions = $user->getTransactions(); // Récupérer les transactions de l'utilisateur (dépots & retraits)
         }
 
         return $this->render('profil/profil.html.twig', [

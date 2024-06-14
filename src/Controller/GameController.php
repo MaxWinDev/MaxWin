@@ -23,6 +23,10 @@ class GameController extends AbstractController
     {
     }
 
+    /**
+     * @return void
+     * @description Route pour la page de jeu
+     */
     #[Route('/', name: 'game', methods: ['GET'])]
     public function viewGame()
     {
@@ -38,11 +42,18 @@ class GameController extends AbstractController
         return $response;
     }
 
+    /**
+     * @return Response
+     * @description Route appelé depuis le JS, pour vérifier les gains de l'utilisateur,
+     * décrémenter sa balance (prix du spin) et si il y a des gains, lui ajouter à sa balance
+     */
     #[Route('/check_wins', name: 'check_wins', methods: ['POST'])]
     public function checkWins(Request $request): Response
     {
         // Décrémenter le solde de l'utilisateur de 1 pour chaque spin
         $user = $this->security->getUser();
+
+        // On vérifie si l'utilisateur a assez pour pouvoir jouer, sinon on lui ajouter 100 à sa balance
         if($user->getBalance() < 1){
             $user->setBalance($user->getBalance() + 100);
         } else {
@@ -88,8 +99,9 @@ class GameController extends AbstractController
             }
         }
 
+        // Si la liste de gains n'est pas vide 
         if (count($wins) !== 0) {
-            $this->gameService->calculatePayout($wins, 1);
+            $this->gameService->calculatePayout($wins, 1); // On ajoute à la balance du client le gain associé, ici avec une mise de 1
         }
         return new Response('', 200);
     }
