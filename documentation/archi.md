@@ -2,6 +2,7 @@
 graph BT;
     subgraph Services
         service1(SecurityService)
+        service2(GameService)
     end
 
     subgraph Controllers
