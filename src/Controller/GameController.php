@@ -89,4 +89,14 @@ class GameController extends AbstractController
         }
         return new Response('', 200);
     }
+
+    #[Route('/balance', name: 'get_balance', methods: ['GET'])]
+    public function getBalance(): Response
+    {
+        $user = $this->security->getUser();
+        if ($user === null) {
+            return new Response(json_encode(['balance' => 0]), 200, ['Content-Type' => 'application/json']);
+        }
+        return new Response(json_encode(['balance' => $user->getBalance()]), 200, ['Content-Type' => 'application/json']);
+    }
 }

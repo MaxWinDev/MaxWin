@@ -16,6 +16,11 @@
         </a>
 
         <div class="balance-profil">
+            <p id="balance">
+                {% if user.balance is defined %}
+                    Balance: {{ user.balance }}
+                {% endif %}
+            </p>
             <a class="button_link" href="{{ path('app_deposit') }}" style="margin-right: 10px;">
                 <button>
                     Deposit
@@ -26,11 +31,6 @@
                     Withdraw
                 </button>
             </a>
-            <p id="balance">
-             {% if user.balance is defined %}
-                Balance: {{ user.balance }}
-             {% endif %}
-             </p>
             <a class="button_link" href="{{ path('app_profil') }}">
                 <button>
                     Profile
@@ -39,4 +39,26 @@
             </a>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function fetchBalance() {
+                fetch('{{ path('get_balance') }}', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('balance').textContent = 'Balance: ' + data.balance;
+                    })
+                    .catch(error => console.error('Error fetching balance:', error));
+            }
+
+            // Fetch balance every 5 seconds
+            setInterval(fetchBalance, 500);
+        });
+    </script>
 {% endblock %}
