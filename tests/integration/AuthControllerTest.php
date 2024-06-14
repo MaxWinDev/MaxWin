@@ -54,8 +54,8 @@ class LoginControllerTest extends WebTestCase
          $form = $crawler->selectButton('Se connecter')->form();
  
          // Remplir le formulaire avec les données de test
-         $form['email'] = 'romain.fillot@gmail.com';
-         $form['password'] = 'guerre007';
+         $form['email'] = 'alexis.carreau16@gmail.com';
+         $form['password'] = 'password';
  
          // Soumettre le formulaire
          $client->submit($form);

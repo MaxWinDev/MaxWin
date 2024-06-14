@@ -134,6 +134,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/shieldon/messenger" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/shieldon/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/phpunit-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-webdriver/webdriver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dbrekelmans/bdi" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/panther" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

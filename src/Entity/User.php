@@ -88,6 +88,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Win::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $wins;
 
+    #[ORM\OneToMany(targetEntity: Transactions::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $transactions;
+
     public function __construct()
     {
         $this->wins = new ArrayCollection();
